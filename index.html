@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lembranças da Festa</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #fff5f5; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+    .card { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); width: 100%; max-width: 400px; text-align: center; }
+    h2 { color: #d84a75; margin-bottom: 8px; }
+    input[type="text"] { width: 90%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; text-align: center; }
+    button, label.btn { display: block; width: 100%; padding: 14px 0; margin: 10px 0; background: #d84a75; color: white; font-weight: bold; border-radius: 8px; border: none; cursor: pointer; font-size: 16px; text-align: center; box-sizing: border-box; }
+    label.btn-secondary { background: #6c757d; }
+    .hidden { display: none; }
+    #status { margin-top: 15px; font-size: 14px; color: #555; }
+    .limit-info { font-size: 12px; color: #888; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Festa de 1 Aninho 🎉</h2>
+    <p>Compartilhe suas fotos e vídeos conosco!</p>
+
+    <!-- TELA 1: IDENTIFICAÇÃO -->
+    <div id="step-name">
+      <input type="text" id="guest-name" placeholder="Digite seu nome" maxlength="30" />
+      <button onclick="saveName()">Continuar</button>
+    </div>
+
+    <!-- TELA 2: UPLOAD -->
+    <div id="step-upload" class="hidden">
+      <p>Olá, <strong id="display-name"></strong>!</p>
+      
+      <!-- Botão para Câmera Direta -->
+      <label class="btn">
+        📸 Tirar Foto Agora
+        <input type="file" id="camera-input" accept="image/*" capture="environment" class="hidden" onchange="handleFile(this)">
+      </label>
+
+      <!-- Botão para Galeria (Fotos ou Vídeos Curtos) -->
+      <label class="btn btn-secondary">
+        🖼️ Escolher da Galeria
+        <input type="file" id="gallery-input" accept="image/*,video/mp4,video/quicktime" class="hidden" onchange="handleFile(this)">
+      </label>
+
+      <p class="limit-info">Envios restantes neste aparelho: <span id="uploads-left">10</span>/10</p>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9NP9LJRZvfBcN4mXc_cmjBbGzn4gTlI2DCkh_Auw7jVxvNPMq7revvmq-8sWt764Y/exec";
+    const MAX_UPLOADS = 10; // Limite por aparelho
+    const MAX_FILE_SIZE_MB = 15; // Limite de 15MB para envios rápidos sem travar
+
+    let currentUploads = parseInt(localStorage.getItem("uploadCount") || "0");
+
+    function saveName() {
+      const name = document.getElementById("guest-name").value.trim();
+      if (!name) return alert("Por favor, digite seu nome!");
+      localStorage.setItem("guestName", name);
+      showUploadScreen(name);
+    }
+
+    function showUploadScreen(name) {
+      document.getElementById("step-name").classList.add("hidden");
+      document.getElementById("step-upload").classList.remove("hidden");
+      document.getElementById("display-name").innerText = name;
+      updateCounter();
+    }
+
+    function updateCounter() {
+      const remaining = MAX_UPLOADS - currentUploads;
+      document.getElementById("uploads-left").innerText = Math.max(0, remaining);
+    }
+
+    // Recupera nome se a pessoa já abriu antes
+    const savedName = localStorage.getItem("guestName");
+    if (savedName) showUploadScreen(savedName);
+
+    function handleFile(input) {
+      if (currentUploads >= MAX_UPLOADS) {
+        return alert("Você atingiu o limite de envios para este aparelho. Obrigado por compartilhar!");
+      }
+
+      const file = input.files[0];
+      if (!file) return;
+
+      // Validação de tamanho
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        alert(`O arquivo é muito grande. Escolha fotos ou vídeos de até ${MAX_FILE_SIZE_MB}MB.`);
+        input.value = "";
+        return;
+      }
+
+      const status = document.getElementById("status");
+      status.innerText = "Enviando arquivo, aguarde...";
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const base64Data = e.target.result.split(",")[1];
+        const payload = {
+          userName: localStorage.getItem("guestName"),
+          fileName: file.name,
+          mimeType: file.type,
+          base64: base64Data
+        };
+
+        fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            currentUploads++;
+            localStorage.setItem("uploadCount", currentUploads);
+            updateCounter();
+            status.innerText = "✅ Enviado com sucesso!";
+          } else {
+            status.innerText = "❌ Erro ao enviar. Tente novamente.";
+          }
+          input.value = "";
+        })
+        .catch(() => {
+          status.innerText = "❌ Erro de conexão. Tente novamente.";
+          input.value = "";
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
