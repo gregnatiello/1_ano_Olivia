@@ -5,29 +5,39 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
   <title>Olivia - 1 Aninho</title>
 
   <style>
 
+    /* =====================================================
+       CORES
+    ===================================================== */
+
     :root {
-      --rosa: #d98a9b;
-      --rosa-escuro: #bd647d;
+      --lilas: #8f80b0;
+      --lilas-escuro: #71638f;
 
-      --lilas: #9c86bb;
-      --lilas-escuro: #78649b;
+      --rosa: #cf8b9e;
+      --rosa-claro: #dd9aa9;
 
-      --verde: #8d9b6b;
+      --verde: #8c9a6d;
+      --verde-escuro: #718058;
 
-      --texto: #6f5b72;
-      --creme: #fff8ec;
+      --texto: #625f73;
+      --branco: #ffffff;
     }
 
 
+    /* =====================================================
+       RESET
+    ===================================================== */
+
     * {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
 
@@ -50,317 +60,453 @@
         sans-serif;
 
       overflow-x: hidden;
+
+      background: #f8f3e8;
     }
 
 
-    /* ==========================================
-       IMAGEM DE FUNDO
-       ========================================== */
+    /* =====================================================
+       FUNDO PRINCIPAL
+    ===================================================== */
 
     .page {
-      width: 100%;
-      min-height: 100svh;
-      min-height: 100vh;
 
       position: relative;
 
+      width: 100%;
+      min-height: 100svh;
+
+      padding-top:
+        max(20px, env(safe-area-inset-top));
+
+      padding-bottom:
+        max(25px, env(safe-area-inset-bottom));
+
       background-image:
-        url("fundo-olivia.jpg");
+        url("fundo-olivia.png");
 
       background-size: cover;
-      background-position: center center;
-      background-repeat: no-repeat;
+
+      background-position:
+        center top;
+
+      background-repeat:
+        no-repeat;
 
       overflow: hidden;
     }
 
 
-    /* ==========================================
-       ÁREA CENTRAL ONDE FICA O CONTEÚDO
-       ========================================== */
+    /* =====================================================
+       CONTEÚDO
+    ===================================================== */
 
-    #step-name,
-    #step-upload {
-      position: absolute;
+    .content {
 
-      left: 8%;
-      right: 8%;
+      width: 100%;
+      max-width: 520px;
 
-      /*
-        Esta área foi pensada para ocupar
-        o espaço vazio central da imagem.
-      */
+      margin: 0 auto;
 
-      top: 30%;
-      bottom: 20%;
+      padding:
+        38px 28px 60px;
 
       display: flex;
       flex-direction: column;
-
-      justify-content: center;
       align-items: center;
 
       text-align: center;
     }
 
 
-    .hidden {
-      display: none !important;
+    /* =====================================================
+       LOGO / TÍTULO
+    ===================================================== */
+
+    .brand {
+
+      margin-top: 18px;
+      margin-bottom: 28px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
 
-    /* ==========================================
-       TEXTOS
-       ========================================== */
+    .olivia {
 
-    .title {
-      margin: 0 0 12px;
-
-      color: var(--lilas-escuro);
+      margin: 0;
 
       font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-      font-size: clamp(26px, 7vw, 34px);
+      font-size: clamp(46px, 13vw, 68px);
 
-      font-weight: 600;
+      font-weight: 500;
 
-      text-shadow:
-        0 2px 10px rgba(255, 255, 255, 0.75);
-    }
+      letter-spacing: 8px;
 
+      color: #8775a4;
 
-    .subtitle {
-      width: 100%;
-      max-width: 340px;
-
-      margin: 0 0 22px;
-
-      color: var(--texto);
-
-      font-size: 15px;
-      line-height: 1.5;
+      line-height: 0.9;
 
       text-shadow:
-        0 1px 8px rgba(255, 255, 255, 0.8);
+        0 2px 10px rgba(255,255,255,0.7);
     }
 
 
-    .welcome {
-      margin: 0 0 10px;
-
-      color: var(--texto);
-
-      font-size: 17px;
-
-      text-shadow:
-        0 1px 8px rgba(255, 255, 255, 0.9);
-    }
-
-
-    .welcome strong {
-      color: var(--rosa-escuro);
-    }
-
-
-    /* ==========================================
-       CAMPO DO NOME
-       ========================================== */
-
-    .name-input {
-      width: 100%;
-      max-width: 350px;
-
-      padding: 15px 18px;
-
-      border-radius: 18px;
-
-      border:
-        1px solid rgba(156, 134, 187, 0.45);
-
-      background:
-        rgba(255, 255, 255, 0.72);
-
-      color: var(--texto);
-
-      font-size: 16px;
-
-      text-align: center;
-
-      outline: none;
-
-      box-shadow:
-        0 5px 18px rgba(102, 82, 108, 0.08);
-
-      transition: 0.2s ease;
-    }
-
-
-    .name-input::placeholder {
-      color: #a493a1;
-    }
-
-
-    .name-input:focus {
-      border-color: var(--lilas);
-
-      background:
-        rgba(255, 255, 255, 0.9);
-
-      box-shadow:
-        0 0 0 4px rgba(156, 134, 187, 0.12);
-    }
-
-
-    /* ==========================================
-       BOTÕES
-       ========================================== */
-
-    .action-btn {
-      width: 100%;
-      max-width: 350px;
-
-      min-height: 56px;
+    .aninho {
 
       margin-top: 12px;
 
-      padding: 14px 18px;
+      font-family:
+        "Brush Script MT",
+        "Segoe Script",
+        cursive;
+
+      font-size: clamp(35px, 10vw, 50px);
+
+      font-weight: 400;
+
+      color: #c98296;
+
+      line-height: 1;
+    }
+
+
+    .heart {
+
+      margin-top: 14px;
+
+      font-size: 24px;
+
+      color: #d78e9e;
+
+      animation: pulse 2s infinite;
+    }
+
+
+    @keyframes pulse {
+
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+
+    }
+
+
+    /* =====================================================
+       FRASE
+    ===================================================== */
+
+    .intro {
+
+      width: 100%;
+      max-width: 330px;
+
+      margin:
+        0 0 36px;
+
+      color: var(--texto);
+
+      font-size: clamp(16px, 4.3vw, 20px);
+
+      font-weight: 400;
+
+      line-height: 1.45;
+
+      text-shadow:
+        0 1px 5px rgba(255,255,255,0.9);
+    }
+
+
+    /* =====================================================
+       SAUDAÇÃO
+    ===================================================== */
+
+    .welcome {
+
+      margin:
+        0 0 10px;
+
+      color: #696579;
+
+      font-size: clamp(29px, 8vw, 40px);
+
+      font-weight: 400;
+
+      line-height: 1.1;
+    }
+
+
+    .guest-name-display {
+
+      margin:
+        0 0 34px;
+
+      font-family:
+        "Brush Script MT",
+        "Segoe Script",
+        cursive;
+
+      font-size: clamp(42px, 11vw, 58px);
+
+      font-weight: 400;
+
+      color: #c77d91;
+
+      line-height: 1;
+
+      text-shadow:
+        0 2px 10px rgba(255,255,255,0.8);
+    }
+
+
+    .leaf-line {
+
+      width: 190px;
+      height: 20px;
+
+      margin-top: -25px;
+      margin-bottom: 26px;
+
+      position: relative;
+
+      border-bottom:
+        1px solid rgba(113, 128, 88, 0.6);
+
+      border-radius: 50%;
+    }
+
+
+    .leaf-line::before,
+    .leaf-line::after {
+
+      content: "❀";
+
+      position: absolute;
+
+      bottom: -11px;
+
+      color: #d88fa0;
+
+      font-size: 22px;
+    }
+
+
+    .leaf-line::before {
+      left: 8px;
+    }
+
+
+    .leaf-line::after {
+      right: 8px;
+    }
+
+
+    /* =====================================================
+       BOTÕES
+    ===================================================== */
+
+    .upload-buttons {
+
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 16px;
+    }
+
+
+    .upload-button {
+
+      width: 100%;
+
+      min-height: 88px;
+
+      padding:
+        16px 24px;
 
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
 
-      gap: 12px;
+      gap: 24px;
 
       border: none;
-      border-radius: 18px;
+
+      border-radius: 26px;
 
       cursor: pointer;
 
       color: white;
 
-      font-size: 16px;
-      font-weight: 700;
+      font-size: clamp(20px, 5.3vw, 27px);
 
-      text-align: center;
+      font-weight: 600;
+
+      text-align: left;
 
       box-shadow:
-        0 8px 20px rgba(80, 60, 80, 0.16);
+        0 10px 25px rgba(70, 60, 75, 0.12);
 
       transition:
         transform 0.2s ease,
-        filter 0.2s ease,
-        box-shadow 0.2s ease;
+        filter 0.2s ease;
 
-      -webkit-tap-highlight-color:
-        transparent;
+      position: relative;
+
+      overflow: hidden;
     }
 
 
-    .action-btn:hover {
-      transform: translateY(-2px);
+    .upload-button::after {
 
-      filter: brightness(1.04);
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+        linear-gradient(
+          110deg,
+          rgba(255,255,255,0.12),
+          transparent 45%
+        );
+
+      pointer-events: none;
     }
 
 
-    .action-btn:active {
+    .upload-button:active {
+
       transform: scale(0.98);
     }
 
 
-    .action-btn svg {
-      width: 23px;
-      height: 23px;
+    .upload-button:hover {
+
+      filter: brightness(1.03);
+    }
+
+
+    .upload-button svg {
+
+      width: 43px;
+      height: 43px;
 
       flex-shrink: 0;
+
+      stroke: white;
+
+      stroke-width: 1.8;
+
+      position: relative;
+
+      z-index: 2;
     }
 
 
-    /* BOTÃO CONTINUAR */
+    .upload-button span {
 
-    .btn-continue {
-      background:
-        linear-gradient(
-          135deg,
-          #a68cc3,
-          #d58fa2
-        );
+      position: relative;
+
+      z-index: 2;
     }
 
-
-    /* BOTÃO FOTO */
 
     .btn-photo {
+
       background:
         linear-gradient(
           135deg,
-          #a78bc0,
-          #8870ab
+          #8f7eae,
+          #9a8abb
         );
     }
 
-
-    /* BOTÃO VÍDEO */
 
     .btn-video {
+
       background:
         linear-gradient(
           135deg,
-          #df9cac,
-          #c8758b
+          #d18a9c,
+          #d594a5
         );
     }
 
 
-    /* BOTÃO GALERIA */
-
     .btn-gallery {
+
       background:
         linear-gradient(
           135deg,
-          #9baa78,
-          #7f8e61
+          #89966a,
+          #7e8c60
         );
     }
 
 
     .file-input {
+
       display: none;
     }
 
 
-    /* ==========================================
+    /* =====================================================
        CONTADORES
-       ========================================== */
+    ===================================================== */
 
     .limits {
+
       width: 100%;
-      max-width: 350px;
 
       display: grid;
 
       grid-template-columns:
-        1fr 1fr;
+        repeat(2, 1fr);
 
-      gap: 10px;
+      gap: 16px;
 
-      margin-top: 18px;
+      margin-top: 28px;
     }
 
 
     .limit-card {
-      padding: 10px 8px;
 
-      border-radius: 15px;
+      min-height: 205px;
+
+      padding: 25px 12px 20px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
 
       background:
-        rgba(255, 255, 255, 0.35);
+        rgba(255,255,255,0.38);
 
       border:
-        1px solid rgba(255, 255, 255, 0.55);
+        1px solid rgba(130,115,100,0.16);
+
+      border-radius: 30px;
+
+      box-shadow:
+        0 8px 24px rgba(90,80,80,0.06);
 
       backdrop-filter:
         blur(3px);
@@ -368,74 +514,206 @@
 
 
     .limit-icon {
-      font-size: 19px;
 
-      margin-bottom: 2px;
+      width: 52px;
+      height: 52px;
+
+      margin-bottom: 14px;
+    }
+
+
+    .limit-icon svg {
+
+      width: 100%;
+      height: 100%;
+
+      fill: none;
+
+      stroke-width: 1.7;
+    }
+
+
+    .photo-icon {
+      stroke: #8779aa;
+    }
+
+
+    .video-icon {
+      stroke: #cf8496;
     }
 
 
     .limit-number {
+
       display: block;
 
-      color: var(--lilas-escuro);
+      margin-bottom: 8px;
 
-      font-size: 19px;
-      font-weight: 800;
+      font-size: clamp(48px, 13vw, 66px);
+
+      font-weight: 600;
+
+      line-height: 1;
     }
 
 
-    .limit-text {
-      color: #806f7d;
-
-      font-size: 11px;
-
-      text-shadow:
-        0 1px 5px rgba(255, 255, 255, 0.9);
+    .photos-number {
+      color: #8275a1;
     }
 
 
-    /* ==========================================
-       STATUS
-       ========================================== */
+    .videos-number {
+      color: #cd8294;
+    }
+
+
+    .limit-label {
+
+      color: #666473;
+
+      font-size: clamp(16px, 4vw, 19px);
+
+      font-weight: 400;
+    }
+
+
+    /* =====================================================
+       CAIXA IMPORTANTE
+    ===================================================== */
+
+    .important-box {
+
+      width: 100%;
+
+      margin-top: 28px;
+
+      padding:
+        26px 20px 28px;
+
+      border-radius: 30px;
+
+      background:
+        rgba(255,255,255,0.34);
+
+      border:
+        1px solid rgba(130,115,100,0.15);
+
+      box-shadow:
+        0 8px 24px rgba(90,80,80,0.05);
+
+      backdrop-filter:
+        blur(3px);
+    }
+
+
+    .important-title {
+
+      margin: 0 0 14px;
+
+      color: #69677b;
+
+      font-size: clamp(20px, 5vw, 24px);
+
+      font-weight: 700;
+    }
+
+
+    .important-title::before {
+
+      content: "❀";
+
+      margin-right: 14px;
+
+      color: #82905f;
+    }
+
+
+    .important-title::after {
+
+      content: "❀";
+
+      margin-left: 14px;
+
+      color: #82905f;
+    }
+
+
+    .important-text {
+
+      margin: 0;
+
+      color: #666473;
+
+      font-size: clamp(16px, 4.2vw, 19px);
+
+      line-height: 1.55;
+    }
+
+
+    .important-thanks {
+
+      margin-top: 20px;
+
+      color: #666473;
+
+      font-size: clamp(16px, 4.2vw, 19px);
+    }
+
+
+    .bottom-heart {
+
+      margin-top: 14px;
+
+      font-size: 25px;
+
+      color: #a999c2;
+    }
+
+
+    /* =====================================================
+       STATUS DO ENVIO
+    ===================================================== */
 
     #status {
+
       width: 100%;
-      max-width: 350px;
+
+      margin-top: 18px;
 
       min-height: 28px;
 
-      margin-top: 15px;
+      text-align: center;
 
-      color: var(--texto);
+      font-size: 15px;
 
-      font-size: 13px;
       line-height: 1.4;
 
-      text-align: center;
+      color: #676373;
     }
 
 
     .loading {
+
       display: inline-flex;
 
       align-items: center;
 
-      gap: 8px;
+      gap: 10px;
     }
 
 
-    .loading-spinner {
+    .spinner {
+
       width: 18px;
       height: 18px;
 
       border-radius: 50%;
 
       border:
-        3px solid
-        rgba(156, 134, 187, 0.25);
+        3px solid rgba(143,126,174,0.2);
 
       border-top-color:
-        var(--lilas);
+        #8f7eae;
 
       animation:
         spin 0.8s linear infinite;
@@ -443,72 +721,256 @@
 
 
     @keyframes spin {
+
       to {
         transform: rotate(360deg);
       }
+
     }
 
 
     .success {
-      color: #637e58;
-      font-weight: 700;
 
-      text-shadow:
-        0 1px 5px rgba(255, 255, 255, 0.8);
+      color: #657651;
+
+      font-weight: 600;
     }
 
 
     .error {
-      color: #b95e70;
+
+      color: #b76278;
+
+      font-weight: 600;
+    }
+
+
+    /* =====================================================
+       TELA PARA INSERIR O NOME
+    ===================================================== */
+
+    #name-screen {
+
+      position: fixed;
+
+      inset: 0;
+
+      z-index: 100;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 25px;
+
+      background:
+        rgba(255, 249, 239, 0.68);
+
+      backdrop-filter:
+        blur(6px);
+
+      transition:
+        opacity 0.35s ease,
+        visibility 0.35s ease;
+    }
+
+
+    #name-screen.hidden {
+
+      opacity: 0;
+
+      visibility: hidden;
+
+      pointer-events: none;
+    }
+
+
+    .name-card {
+
+      width: 100%;
+
+      max-width: 420px;
+
+      padding:
+        38px 25px;
+
+      text-align: center;
+
+      border-radius: 32px;
+
+      background:
+        rgba(255,255,255,0.74);
+
+      border:
+        1px solid rgba(145,125,160,0.2);
+
+      box-shadow:
+        0 20px 50px rgba(80,60,80,0.12);
+    }
+
+
+    .name-card h2 {
+
+      margin: 0 0 12px;
+
+      color: #79678f;
+
+      font-family:
+        Georgia,
+        serif;
+
+      font-size: 31px;
+
+      font-weight: 500;
+    }
+
+
+    .name-card p {
+
+      margin:
+        0 0 25px;
+
+      color: #696473;
+
+      line-height: 1.5;
+
+      font-size: 16px;
+    }
+
+
+    .name-input {
+
+      width: 100%;
+
+      height: 58px;
+
+      padding:
+        0 18px;
+
+      margin-bottom: 15px;
+
+      border-radius: 18px;
+
+      border:
+        1px solid rgba(143,126,174,0.32);
+
+      background:
+        rgba(255,255,255,0.85);
+
+      color: #625f73;
+
+      font-size: 18px;
+
+      text-align: center;
+
+      outline: none;
+    }
+
+
+    .name-input:focus {
+
+      border-color:
+        #a88eb5;
+
+      box-shadow:
+        0 0 0 4px rgba(168,142,181,0.12);
+    }
+
+
+    .continue-button {
+
+      width: 100%;
+
+      height: 60px;
+
+      border: none;
+
+      border-radius: 18px;
+
+      cursor: pointer;
+
+      background:
+        linear-gradient(
+          135deg,
+          #9a87b4,
+          #cf8c9e
+        );
+
+      color: white;
+
+      font-size: 18px;
+
       font-weight: 700;
 
-      text-shadow:
-        0 1px 5px rgba(255, 255, 255, 0.8);
+      box-shadow:
+        0 8px 20px rgba(100,70,100,0.15);
     }
 
 
-    .small-note {
-      width: 100%;
-      max-width: 350px;
+    /* =====================================================
+       CELULARES PEQUENOS
+    ===================================================== */
 
-      margin-top: 8px;
+    @media (max-width: 390px) {
 
-      color: #8d7c89;
+      .content {
 
-      font-size: 10px;
-      line-height: 1.4;
-
-      text-shadow:
-        0 1px 5px rgba(255, 255, 255, 0.9);
-    }
-
-
-    /* ==========================================
-       AJUSTE PARA TELAS MENORES
-       ========================================== */
-
-    @media (max-height: 700px) {
-
-      #step-name,
-      #step-upload {
-        top: 25%;
-        bottom: 14%;
+        padding:
+          28px 22px 50px;
       }
 
 
-      .action-btn {
-        min-height: 50px;
-        margin-top: 8px;
-      }
+      .brand {
 
-
-      .limits {
         margin-top: 10px;
+        margin-bottom: 22px;
       }
 
 
-      .title {
-        margin-bottom: 6px;
+      .intro {
+
+        margin-bottom: 27px;
+      }
+
+
+      .guest-name-display {
+
+        margin-bottom: 28px;
+      }
+
+
+      .upload-buttons {
+
+        gap: 12px;
+      }
+
+
+      .upload-button {
+
+        min-height: 76px;
+
+        border-radius: 23px;
+
+        gap: 18px;
+
+        padding:
+          13px 20px;
+      }
+
+
+      .upload-button svg {
+
+        width: 37px;
+        height: 37px;
+      }
+
+
+      .limit-card {
+
+        min-height: 170px;
+
+        border-radius: 25px;
       }
 
     }
@@ -519,23 +981,20 @@
 
 <body>
 
-  <main class="page">
 
+  <!-- =====================================================
+       TELA PARA DIGITAR O NOME
+  ====================================================== -->
 
-    <!-- ========================================
-         TELA 1 - NOME DO CONVIDADO
-         ======================================== -->
+  <div id="name-screen">
 
-    <section id="step-name">
+    <div class="name-card">
 
-      <h1 class="title">
-        Vamos guardar essa lembrança? 💜
-      </h1>
+      <h2>Olá! 💜</h2>
 
-
-      <p class="subtitle">
-        Digite seu nome para registrar suas fotos e vídeos
-        dessa festa tão especial.
+      <p>
+        Antes de começar, digite seu nome para
+        registrarmos suas lembranças.
       </p>
 
 
@@ -551,213 +1010,307 @@
 
       <button
         type="button"
-        class="action-btn btn-continue"
-        onclick="saveNameAndContinue()"
+        class="continue-button"
+        onclick="saveGuestName()"
       >
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M4 7h3l2-3h6l2 3h3v13H4z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
-
         Continuar
-
       </button>
 
-    </section>
+    </div>
+
+  </div>
 
 
-    <!-- ========================================
-         TELA 2 - ENVIO
-         ======================================== -->
 
-    <section
-      id="step-upload"
-      class="hidden"
-    >
+  <!-- =====================================================
+       PÁGINA PRINCIPAL
+  ====================================================== -->
 
-      <h1 class="title">
-        Olá, <span id="display-name"></span>!
-      </h1>
+  <main class="page">
+
+    <div class="content">
 
 
-      <p class="subtitle">
-        Escolha como deseja registrar esse momento especial.
+      <!-- TOPO -->
+
+      <section class="brand">
+
+        <h1 class="olivia">
+          OLIVIA
+        </h1>
+
+
+        <div class="aninho">
+          1 aninho
+        </div>
+
+
+        <div class="heart">
+          ♥
+        </div>
+
+      </section>
+
+
+
+      <!-- FRASE -->
+
+      <p class="intro">
+
+        Escolha como deseja registrar<br>
+        esse momento especial.
+
       </p>
 
 
-      <!-- FOTO -->
 
-      <label class="action-btn btn-photo">
+      <!-- SAUDAÇÃO -->
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M4 7h3l2-3h6l2 3h3v13H4z"/>
-          <circle cx="12" cy="13" r="4"/>
-        </svg>
+      <h2 class="welcome">
+        Olá,
+      </h2>
 
 
-        <span>
-          Tirar uma foto
-        </span>
+      <div
+        class="guest-name-display"
+        id="display-name"
+      >
+        Convidado!
+      </div>
 
 
-        <input
-          type="file"
-          id="camera-photo"
-          class="file-input"
-          accept="image/*"
-          capture="environment"
-          onchange="handleFile(this)"
-        >
-
-      </label>
+      <div class="leaf-line"></div>
 
 
-      <!-- VÍDEO -->
 
-      <label class="action-btn btn-video">
+      <!-- BOTÕES -->
 
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect
-            x="3"
-            y="5"
-            width="12"
-            height="14"
-            rx="2"
-          />
-
-          <path d="M15 10l6-3v10l-6-3z"/>
-        </svg>
+      <section class="upload-buttons">
 
 
-        <span>
-          Gravar vídeo
-        </span>
+        <!-- FOTO -->
+
+        <label class="upload-button btn-photo">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M4 7h3l2-3h6l2 3h3v13H4z"
+            />
+
+            <circle
+              cx="12"
+              cy="13"
+              r="4"
+            />
+
+          </svg>
 
 
-        <input
-          type="file"
-          id="camera-video"
-          class="file-input"
-          accept="video/*"
-          capture="environment"
-          onchange="handleFile(this)"
-        >
-
-      </label>
+          <span>
+            Tirar uma foto
+          </span>
 
 
-      <!-- GALERIA -->
+          <input
+            type="file"
+            id="camera-photo"
+            class="file-input"
+            accept="image/*"
+            capture="environment"
+            onchange="handleFile(this)"
+          >
 
-      <label class="action-btn btn-gallery">
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect
-            x="3"
-            y="4"
-            width="18"
-            height="16"
-            rx="2"
-          />
-
-          <circle
-            cx="8.5"
-            cy="9"
-            r="1.5"
-          />
-
-          <path d="M21 15l-5-5L5 20"/>
-        </svg>
+        </label>
 
 
-        <span>
-          Escolher da galeria
-        </span>
+
+        <!-- VÍDEO -->
+
+        <label class="upload-button btn-video">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+
+            <rect
+              x="3"
+              y="5"
+              width="12"
+              height="14"
+              rx="2"
+            />
+
+            <path
+              d="M15 10l6-3v10l-6-3z"
+            />
+
+          </svg>
 
 
-        <input
-          type="file"
-          id="gallery-input"
-          class="file-input"
-          accept="image/*,video/*"
-          onchange="handleFile(this)"
-        >
+          <span>
+            Gravar vídeo (até 40s)
+          </span>
 
-      </label>
+
+          <input
+            type="file"
+            id="camera-video"
+            class="file-input"
+            accept="video/*"
+            capture="environment"
+            onchange="handleFile(this)"
+          >
+
+        </label>
+
+
+
+        <!-- GALERIA -->
+
+        <label class="upload-button btn-gallery">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+
+            <rect
+              x="3"
+              y="4"
+              width="18"
+              height="16"
+              rx="2"
+            />
+
+            <circle
+              cx="8.5"
+              cy="9"
+              r="1.5"
+            />
+
+            <path
+              d="M21 15l-5-5L5 20"
+            />
+
+          </svg>
+
+
+          <span>
+            Escolher da galeria
+          </span>
+
+
+          <input
+            type="file"
+            id="gallery-input"
+            class="file-input"
+            accept="image/*,video/*"
+            onchange="handleFile(this)"
+          >
+
+        </label>
+
+
+      </section>
+
 
 
       <!-- CONTADORES -->
 
-      <div class="limits">
+      <section class="limits">
+
+
+        <!-- FOTOS -->
 
         <div class="limit-card">
 
           <div class="limit-icon">
-            📷
+
+            <svg
+              class="photo-icon"
+              viewBox="0 0 24 24"
+            >
+
+              <path
+                d="M4 7h3l2-3h6l2 3h3v13H4z"
+              />
+
+              <circle
+                cx="12"
+                cy="13"
+                r="4"
+              />
+
+            </svg>
+
           </div>
 
+
           <span
-            class="limit-number"
             id="photos-left"
+            class="limit-number photos-number"
           >
             10
           </span>
 
-          <span class="limit-text">
+
+          <span class="limit-label">
             fotos restantes
           </span>
 
         </div>
 
 
+
+        <!-- VÍDEOS -->
+
         <div class="limit-card">
 
           <div class="limit-icon">
-            🎬
+
+            <svg
+              class="video-icon"
+              viewBox="0 0 24 24"
+            >
+
+              <rect
+                x="3"
+                y="5"
+                width="12"
+                height="14"
+                rx="2"
+              />
+
+              <path
+                d="M15 10l6-3v10l-6-3z"
+              />
+
+            </svg>
+
           </div>
 
+
           <span
-            class="limit-number"
             id="videos-left"
+            class="limit-number videos-number"
           >
             3
           </span>
 
-          <span class="limit-text">
+
+          <span class="limit-label">
             vídeos restantes
           </span>
 
         </div>
 
-      </div>
+
+      </section>
+
 
 
       <!-- STATUS -->
@@ -765,22 +1318,51 @@
       <div id="status"></div>
 
 
-      <div class="small-note">
-        Máximo de 10 fotos e 3 vídeos por convidado.<br>
-        Vídeos de até aproximadamente 1 minuto.
-      </div>
 
-    </section>
+      <!-- INFORMAÇÕES -->
 
+      <section class="important-box">
+
+        <h3 class="important-title">
+          Importante
+        </h3>
+
+
+        <p class="important-text">
+
+          Máximo de 10 fotos e 3 vídeos por convidado.<br>
+
+          Vídeos de até 40 segundos.
+
+        </p>
+
+
+        <div class="important-thanks">
+
+          Obrigado por compartilhar esse momento!
+
+        </div>
+
+
+        <div class="bottom-heart">
+          ♥
+        </div>
+
+      </section>
+
+
+    </div>
 
   </main>
 
 
+
   <script>
 
-    // ==========================================
-    // CONFIGURAÇÕES
-    // ==========================================
+    /* =====================================================
+       CONFIGURAÇÕES
+    ====================================================== */
+
 
     const SCRIPT_URL =
       "https://script.google.com/macros/s/AKfycbx9NP9LJRZvfBcN4mXc_cmjBbGzn4gTlI2DCkh_Auw7jVxvNPMq7revvmq-8sWt764Y/exec";
@@ -790,77 +1372,52 @@
 
     const MAX_VIDEOS = 3;
 
+    const MAX_VIDEO_DURATION = 40;
+
     const MAX_FILE_SIZE_MB = 50;
 
 
-    // ==========================================
-    // CONTADORES ATUAIS
-    // ==========================================
 
-    let currentPhotos = 0;
-
-    let currentVideos = 0;
+    /* =====================================================
+       CONTADORES
+    ====================================================== */
 
 
-    // ==========================================
-    // CRIA ID ÚNICO DO CONVIDADO
-    // ==========================================
-
-    function getGuestId() {
-
-      let guestId =
-        localStorage.getItem(
-          "oliviaGuestId"
-        );
+    let currentPhotos =
+      parseInt(
+        localStorage.getItem("oliviaPhotos") || "0"
+      );
 
 
-      if (!guestId) {
-
-        guestId =
-          "guest_" +
-          Date.now() +
-          "_" +
-          Math.random()
-            .toString(36)
-            .substring(2, 10);
+    let currentVideos =
+      parseInt(
+        localStorage.getItem("oliviaVideos") || "0"
+      );
 
 
-        localStorage.setItem(
-          "oliviaGuestId",
-          guestId
-        );
 
-      }
+    /* =====================================================
+       SALVAR NOME
+    ====================================================== */
 
 
-      return guestId;
+    function saveGuestName() {
 
-    }
-
-
-    // ==========================================
-    // SALVA NOME
-    // ==========================================
-
-    function saveNameAndContinue() {
-
-      const nameInput =
-        document.getElementById(
-          "guest-name"
-        );
+      const input =
+        document.getElementById("guest-name");
 
 
       const name =
-        nameInput.value.trim();
+        input.value.trim();
 
 
       if (!name) {
 
         alert(
-          "Por favor, digite seu nome!"
+          "Por favor, digite seu nome."
         );
 
-        nameInput.focus();
+        input.focus();
 
         return;
 
@@ -868,96 +1425,62 @@
 
 
       localStorage.setItem(
-        "guestName",
+        "oliviaGuestName",
         name
       );
 
 
-      getGuestId();
+      document.getElementById(
+        "display-name"
+      ).textContent =
+        name + "!";
 
-
-      showUploadScreen(name);
-
-    }
-
-
-    // ==========================================
-    // MOSTRA TELA DE ENVIO
-    // ==========================================
-
-    function showUploadScreen(name) {
 
       document
-        .getElementById("step-name")
+        .getElementById("name-screen")
         .classList
         .add("hidden");
 
-
-      document
-        .getElementById("step-upload")
-        .classList
-        .remove("hidden");
-
-
-      document.getElementById(
-        "display-name"
-      ).innerText = name;
-
-
-      loadLocalCounters();
-
-      updateCounters();
-
     }
 
 
-    // ==========================================
-    // CARREGA CONTADORES LOCAIS
-    // ==========================================
 
-    function loadLocalCounters() {
+    /* =====================================================
+       CARREGAR NOME
+    ====================================================== */
 
-      currentPhotos =
-        parseInt(
-          localStorage.getItem(
-            "oliviaCurrentPhotos"
-          ) || "0"
+
+    function loadGuestName() {
+
+      const savedName =
+        localStorage.getItem(
+          "oliviaGuestName"
         );
 
 
-      currentVideos =
-        parseInt(
-          localStorage.getItem(
-            "oliviaCurrentVideos"
-          ) || "0"
-        );
+      if (savedName) {
+
+        document.getElementById(
+          "display-name"
+        ).textContent =
+          savedName + "!";
+
+
+        document
+          .getElementById("name-screen")
+          .classList
+          .add("hidden");
+
+      }
 
     }
 
 
-    // ==========================================
-    // SALVA CONTADORES LOCAIS
-    // ==========================================
 
-    function saveLocalCounters() {
+    /* =====================================================
+       ATUALIZAR CONTADORES
+    ====================================================== */
 
-      localStorage.setItem(
-        "oliviaCurrentPhotos",
-        currentPhotos
-      );
-
-
-      localStorage.setItem(
-        "oliviaCurrentVideos",
-        currentVideos
-      );
-
-    }
-
-
-    // ==========================================
-    // ATUALIZA CONTADORES
-    // ==========================================
 
     function updateCounters() {
 
@@ -977,40 +1500,45 @@
 
       document.getElementById(
         "photos-left"
-      ).innerText =
+      ).textContent =
         photosLeft;
 
 
       document.getElementById(
         "videos-left"
-      ).innerText =
+      ).textContent =
         videosLeft;
 
     }
 
 
-    // ==========================================
-    // AO ABRIR A PÁGINA
-    // ==========================================
 
-    const savedName =
-      localStorage.getItem(
-        "guestName"
+    /* =====================================================
+       SALVAR CONTADORES
+    ====================================================== */
+
+
+    function saveCounters() {
+
+      localStorage.setItem(
+        "oliviaPhotos",
+        currentPhotos
       );
 
 
-    if (savedName) {
-
-      showUploadScreen(
-        savedName
+      localStorage.setItem(
+        "oliviaVideos",
+        currentVideos
       );
 
     }
 
 
-    // ==========================================
-    // PROCESSA O ARQUIVO
-    // ==========================================
+
+    /* =====================================================
+       PROCESSAR ARQUIVO
+    ====================================================== */
+
 
     async function handleFile(input) {
 
@@ -1024,20 +1552,15 @@
 
 
       const isVideo =
-        file.type.startsWith(
-          "video/"
-        );
+        file.type.startsWith("video/");
 
 
       const isImage =
-        file.type.startsWith(
-          "image/"
-        );
+        file.type.startsWith("image/");
 
 
-      // ------------------------------------------
-      // VALIDA TIPO
-      // ------------------------------------------
+
+      /* VALIDAÇÃO DE TIPO */
 
       if (!isVideo && !isImage) {
 
@@ -1052,9 +1575,8 @@
       }
 
 
-      // ------------------------------------------
-      // VALIDA FOTO
-      // ------------------------------------------
+
+      /* LIMITE DE FOTOS */
 
       if (
         isImage &&
@@ -1062,7 +1584,7 @@
       ) {
 
         alert(
-          "Você já atingiu o limite de 10 fotos."
+          "Você atingiu o limite de 10 fotos."
         );
 
         input.value = "";
@@ -1072,9 +1594,8 @@
       }
 
 
-      // ------------------------------------------
-      // VALIDA VÍDEO
-      // ------------------------------------------
+
+      /* LIMITE DE VÍDEOS */
 
       if (
         isVideo &&
@@ -1082,7 +1603,7 @@
       ) {
 
         alert(
-          "Você já atingiu o limite de 3 vídeos."
+          "Você atingiu o limite de 3 vídeos."
         );
 
         input.value = "";
@@ -1092,9 +1613,8 @@
       }
 
 
-      // ------------------------------------------
-      // VALIDA TAMANHO
-      // ------------------------------------------
+
+      /* TAMANHO */
 
       if (
         file.size >
@@ -1102,7 +1622,7 @@
       ) {
 
         alert(
-          `O arquivo é muito grande. O limite é de ${MAX_FILE_SIZE_MB}MB.`
+          `O arquivo ultrapassa ${MAX_FILE_SIZE_MB}MB.`
         );
 
         input.value = "";
@@ -1112,22 +1632,21 @@
       }
 
 
-      // ------------------------------------------
-      // VALIDA DURAÇÃO DO VÍDEO
-      // ------------------------------------------
+
+      /* DURAÇÃO DO VÍDEO */
 
       if (isVideo) {
 
-        const validVideo =
+        const validDuration =
           await validateVideoDuration(
             file
           );
 
 
-        if (!validVideo) {
+        if (!validDuration) {
 
           alert(
-            "O vídeo ultrapassa o limite de aproximadamente 1 minuto."
+            "O vídeo deve ter no máximo 40 segundos."
           );
 
           input.value = "";
@@ -1139,9 +1658,8 @@
       }
 
 
-      // ------------------------------------------
-      // MOSTRA STATUS
-      // ------------------------------------------
+
+      /* STATUS */
 
       const status =
         document.getElementById(
@@ -1150,61 +1668,53 @@
 
 
       status.innerHTML = `
+
         <div class="loading">
-          <span class="loading-spinner"></span>
-          <span>Enviando sua lembrança...</span>
+
+          <span class="spinner"></span>
+
+          <span>
+            Enviando sua lembrança...
+          </span>
+
         </div>
+
       `;
+
 
 
       try {
 
-        const base64Data =
+
+        const base64 =
           await fileToBase64(
             file
           );
 
 
-        // ----------------------------------------
-        // DADOS ENVIADOS AO GOOGLE APPS SCRIPT
-        // ----------------------------------------
+        const guestName =
+          localStorage.getItem(
+            "oliviaGuestName"
+          ) || "Convidado";
+
 
         const payload = {
 
           userName:
-            localStorage.getItem(
-              "guestName"
-            ) || "Convidado",
-
-
-          guestId:
-            getGuestId(),
-
+            guestName,
 
           fileName:
             file.name,
 
-
           mimeType:
-            file.type ||
-            "application/octet-stream",
-
-
-          fileType:
-            isVideo
-              ? "video"
-              : "photo",
-
+            file.type,
 
           base64:
-            base64Data
+            base64
 
         };
 
 
-        // ----------------------------------------
-        // ENVIA PARA O GOOGLE APPS SCRIPT
-        // ----------------------------------------
 
         const response =
           await fetch(
@@ -1224,97 +1734,61 @@
           await response.json();
 
 
-        // ----------------------------------------
-        // SUCESSO
-        // ----------------------------------------
+
+        /* SUCESSO */
 
         if (
           data.status === "success"
         ) {
 
-          currentPhotos =
-            data.photosUsed !== undefined
-              ? data.photosUsed
-              : currentPhotos;
+          if (isImage) {
+
+            currentPhotos++;
+
+          }
 
 
-          currentVideos =
-            data.videosUsed !== undefined
-              ? data.videosUsed
-              : currentVideos;
+          if (isVideo) {
+
+            currentVideos++;
+
+          }
 
 
-          saveLocalCounters();
+          saveCounters();
 
           updateCounters();
 
 
           status.innerHTML = `
+
             <span class="success">
-              ✨ Enviado com sucesso! Obrigado por compartilhar esse momento!
+
+              ✨ Enviado com sucesso!
+              Obrigado por compartilhar esse momento!
+
             </span>
+
           `;
 
         }
 
 
-        // ----------------------------------------
-        // LIMITE ATINGIDO NO SERVIDOR
-        // ----------------------------------------
-
-        else if (
-          data.status === "limit_reached"
-        ) {
-
-          if (
-            data.photosUsed !== undefined
-          ) {
-
-            currentPhotos =
-              data.photosUsed;
-
-          }
-
-
-          if (
-            data.videosUsed !== undefined
-          ) {
-
-            currentVideos =
-              data.videosUsed;
-
-          }
-
-
-          saveLocalCounters();
-
-          updateCounters();
-
-
-          status.innerHTML = `
-            <span class="error">
-              ${data.message}
-            </span>
-          `;
-
-
-          alert(
-            data.message
-          );
-
-        }
-
-
-        // ----------------------------------------
-        // OUTRO ERRO
-        // ----------------------------------------
+        /* ERRO DO SERVIDOR */
 
         else {
 
           status.innerHTML = `
+
             <span class="error">
-              ❌ ${data.message || "Não foi possível enviar o arquivo."}
+
+              ❌ ${
+                data.message ||
+                "Erro ao enviar o arquivo."
+              }
+
             </span>
+
           `;
 
         }
@@ -1322,9 +1796,7 @@
       }
 
 
-      // ------------------------------------------
-      // ERRO DE CONEXÃO
-      // ------------------------------------------
+      /* ERRO DE CONEXÃO */
 
       catch (error) {
 
@@ -1332,9 +1804,14 @@
 
 
         status.innerHTML = `
+
           <span class="error">
-            ❌ Erro de conexão durante o envio. Tente novamente.
+
+            ❌ Erro de conexão.
+            Tente novamente.
+
           </span>
+
         `;
 
       }
@@ -1345,9 +1822,11 @@
     }
 
 
-    // ==========================================
-    // CONVERTE ARQUIVO PARA BASE64
-    // ==========================================
+
+    /* =====================================================
+       CONVERTER ARQUIVO PARA BASE64
+    ====================================================== */
+
 
     function fileToBase64(file) {
 
@@ -1361,12 +1840,9 @@
           reader.onload =
             function(event) {
 
-              const result =
-                event.target.result;
-
-
               resolve(
-                result.split(",")[1]
+                event.target.result
+                  .split(",")[1]
               );
 
             };
@@ -1386,9 +1862,11 @@
     }
 
 
-    // ==========================================
-    // VALIDA DURAÇÃO DO VÍDEO
-    // ==========================================
+
+    /* =====================================================
+       VALIDAR VÍDEO - 40 SEGUNDOS
+    ====================================================== */
+
 
     function validateVideoDuration(file) {
 
@@ -1396,9 +1874,7 @@
         (resolve) => {
 
           const video =
-            document.createElement(
-              "video"
-            );
+            document.createElement("video");
 
 
           video.preload =
@@ -1413,10 +1889,9 @@
               );
 
 
-              // Tolerância de 65 segundos
-
               resolve(
-                video.duration <= 65
+                video.duration <=
+                MAX_VIDEO_DURATION
               );
 
             };
@@ -1425,13 +1900,7 @@
           video.onerror =
             function() {
 
-              /*
-                Se o navegador não conseguir
-                identificar a duração,
-                permite o envio.
-              */
-
-              resolve(true);
+              resolve(false);
 
             };
 
@@ -1445,6 +1914,37 @@
       );
 
     }
+
+
+
+    /* =====================================================
+       INICIALIZAÇÃO
+    ====================================================== */
+
+
+    loadGuestName();
+
+    updateCounters();
+
+
+    /* ENTER NO CAMPO DE NOME */
+
+    document
+      .getElementById("guest-name")
+      .addEventListener(
+        "keydown",
+        function(event) {
+
+          if (
+            event.key === "Enter"
+          ) {
+
+            saveGuestName();
+
+          }
+
+        }
+      );
 
   </script>
 
