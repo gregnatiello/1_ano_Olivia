@@ -12,7 +12,12 @@
 
 <title>Olivia - 1 Aninho</title>
 
+
 <style>
+
+/* =====================================================
+   CONFIGURAÇÃO GERAL
+===================================================== */
 
 * {
   box-sizing: border-box;
@@ -20,839 +25,779 @@
 
 html,
 body {
+
   margin: 0;
   padding: 0;
+
   width: 100%;
   min-height: 100%;
+
 }
 
 body {
 
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
     Arial,
+    Helvetica,
     sans-serif;
 
-  background:
-    #f8eee4;
+  background: #f8eee3;
 
-  color:
-    #68647a;
+  color: #756b82;
 
-  display:
-    flex;
-
-  justify-content:
-    center;
+  min-height: 100vh;
 
 }
 
 
-/* ============================================================
-   CONTAINER
-============================================================ */
+/* =====================================================
+   ÁREA PRINCIPAL
+===================================================== */
 
-.app {
+.container {
 
-  width:
-    100%;
+  width: 100%;
 
-  max-width:
-    650px;
+  max-width: 650px;
 
-  min-height:
-    100vh;
+  min-height: 100vh;
+
+  margin: 0 auto;
 
   padding:
-    28px 22px 35px;
+    28px 24px 30px;
 
-  text-align:
-    center;
-
-}
-
-
-/* ============================================================
-   TÍTULO
-============================================================ */
-
-.logo {
-
-  margin-top:
-    0;
-
-}
-
-.logo-title {
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
-  font-size:
-    clamp(38px, 10vw, 58px);
-
-  letter-spacing:
-    5px;
-
-  color:
-    #8870ad;
-
-  margin:
-    0;
-
-  line-height:
-    1;
+  text-align: center;
 
 }
 
 
-.logo-subtitle {
+/* =====================================================
+   PRIMEIRA TELA
+===================================================== */
 
-  font-size:
-    clamp(36px, 9vw, 52px);
+#step-name {
 
-  font-family:
-    "Brush Script MT",
-    "Segoe Script",
-    cursive;
+  width: 100%;
 
-  color:
-    #ce7e9c;
+  display: flex;
 
-  margin:
-    4px 0 0;
+  flex-direction: column;
 
-  line-height:
-    1;
+  align-items: center;
 
 }
 
+
+/* =====================================================
+   OLIVIA
+===================================================== */
+
+.title {
+
+  margin: 0;
+
+  color: #8c72a9;
+
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: 40px;
+
+  font-weight: 400;
+
+  letter-spacing: 4px;
+
+  line-height: 1;
+
+}
+
+
+/* =====================================================
+   1 ANINHO
+===================================================== */
+
+.subtitle {
+
+  margin-top: 8px;
+
+  color: #d17d99;
+
+  font-family: cursive;
+
+  font-size: 31px;
+
+  line-height: 1;
+
+}
+
+
+/* =====================================================
+   CORAÇÃO
+===================================================== */
 
 .heart {
 
-  color:
-    #dc8ca3;
+  margin-top: 13px;
 
-  font-size:
-    20px;
+  color: #df91a8;
 
-  margin-top:
-    10px;
+  font-size: 18px;
 
 }
 
 
-/* ============================================================
-   INTRODUÇÃO
-============================================================ */
+/* =====================================================
+   TEXTO INTRODUÇÃO
+===================================================== */
 
 .intro {
 
-  margin-top:
-    45px;
-
-}
-
-
-.intro p {
-
   margin:
-    0;
 
-  font-size:
-    16px;
+    42px 0 27px;
 
-  line-height:
-    1.65;
+  color: #625c78;
 
-  color:
-    #5d6280;
+  font-size: 15px;
+
+  line-height: 1.6;
 
 }
 
 
-/* ============================================================
-   NOME
-============================================================ */
-
-.greeting {
-
-  margin-top:
-    34px;
-
-}
-
-
-.greeting-small {
-
-  font-size:
-    31px;
-
-  font-weight:
-    400;
-
-  line-height:
-    1;
-
-  color:
-    #66647a;
-
-}
-
+/* =====================================================
+   CAMPO NOME
+===================================================== */
 
 .name-input {
 
-  width:
-    100%;
+  width: 100%;
 
-  max-width:
-    430px;
+  max-width: 330px;
 
-  margin:
-    8px auto 0;
+  height: 48px;
+
+  padding: 0 18px;
 
   border:
-    none;
 
-  outline:
-    none;
+    1px solid
+    #e2d5ca;
+
+  border-radius: 16px;
 
   background:
-    transparent;
+    rgba(255,255,255,0.72);
 
-  text-align:
-    center;
+  color: #756b82;
 
-  font-family:
-    "Brush Script MT",
-    "Segoe Script",
-    cursive;
+  font-size: 16px;
 
-  font-size:
-    clamp(42px, 10vw, 58px);
+  text-align: center;
 
-  color:
-    #cf7f9b;
+  outline: none;
 
 }
 
 
 .name-input::placeholder {
 
-  color:
-    #cf7f9b;
-
-  opacity:
-    1;
+  color: #a49aa8;
 
 }
 
 
 .name-input:focus {
 
-  border-bottom:
-    1px solid #cf7f9b;
+  border-color: #a483c8;
 
 }
 
 
-/* ============================================================
+/* =====================================================
+   BOTÃO CONTINUAR
+===================================================== */
+
+.continue-button {
+
+  width: 100%;
+
+  max-width: 330px;
+
+  height: 50px;
+
+  margin-top: 12px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  background: #a483c8;
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+}
+
+
+/* =====================================================
+   SEGUNDA TELA
+===================================================== */
+
+#step-upload {
+
+  display: none;
+
+  width: 100%;
+
+}
+
+
+/* =====================================================
+   SAUDAÇÃO
+===================================================== */
+
+.guest-greeting {
+
+  margin-top: 17px;
+
+  margin-bottom: 17px;
+
+}
+
+
+.ola {
+
+  display: block;
+
+  color: #756b82;
+
+  font-size: 25px;
+
+  line-height: 1.1;
+
+}
+
+
+.guest-name {
+
+  display: block;
+
+  margin-top: 2px;
+
+  color: #d17d99;
+
+  font-family: cursive;
+
+  font-size: 34px;
+
+  line-height: 1.1;
+
+  word-break: break-word;
+
+}
+
+
+/* =====================================================
    BOTÕES
-============================================================ */
+===================================================== */
 
 .buttons {
 
-  width:
-    100%;
+  width: 100%;
 
-  max-width:
-    426px;
+  max-width: 450px;
 
-  margin:
-    32px auto 0;
+  margin: 0 auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
 
 }
 
 
 .upload-button {
 
-  position:
-    relative;
+  width: 100%;
 
-  display:
-    flex;
+  height: 50px;
 
-  align-items:
-    center;
+  border: none;
 
-  justify-content:
-    center;
+  border-radius: 16px;
 
-  gap:
-    16px;
+  display: flex;
 
-  width:
-    100%;
+  align-items: center;
 
-  min-height:
-    60px;
+  justify-content: center;
 
-  margin:
-    10px 0;
+  gap: 11px;
 
-  border:
-    none;
+  color: white;
 
-  border-radius:
-    20px;
+  font-size: 15px;
 
-  color:
-    white;
+  font-weight: 600;
 
-  font-size:
-    18px;
-
-  font-weight:
-    600;
-
-  cursor:
-    pointer;
-
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease;
+  cursor: pointer;
 
   box-shadow:
-    0 5px 14px rgba(100,80,110,.12);
+    0 5px 12px
+    rgba(0,0,0,0.08);
+
+  transition:
+    transform .12s ease,
+    opacity .12s ease;
 
 }
 
 
 .upload-button:active {
 
-  transform:
-    scale(.98);
+  transform: scale(.985);
 
 }
 
 
 .photo-button {
 
-  background:
-    #a37ec7;
+  background: #a483c8;
 
 }
 
 
 .video-button {
 
-  background:
-    #db88a2;
+  background: #dc8aa4;
 
 }
 
 
 .gallery-button {
 
-  background:
-    #a8b982;
+  background: #a9ba7f;
 
 }
 
+
+.upload-button.disabled {
+
+  opacity: .45;
+
+  pointer-events: none;
+
+}
+
+
+/* =====================================================
+   INPUT FILE
+===================================================== */
+
+input[type="file"] {
+
+  display: none;
+
+}
+
+
+/* =====================================================
+   ÍCONES
+===================================================== */
 
 .icon {
 
-  width:
-    30px;
+  width: 25px;
 
-  height:
-    30px;
+  height: 25px;
 
-  display:
-    flex;
+  fill: none;
 
-  align-items:
-    center;
+  stroke: white;
 
-  justify-content:
-    center;
+  stroke-width: 2;
 
-}
+  stroke-linecap: round;
 
+  stroke-linejoin: round;
 
-.icon svg {
-
-  width:
-    30px;
-
-  height:
-    30px;
-
-  stroke:
-    white;
-
-  fill:
-    none;
-
-  stroke-width:
-    2;
-
-  stroke-linecap:
-    round;
-
-  stroke-linejoin:
-    round;
+  flex-shrink: 0;
 
 }
 
 
-.hidden-input {
-
-  display:
-    none;
-
-}
-
-
-/* ============================================================
+/* =====================================================
    CONTADORES
-============================================================ */
+===================================================== */
 
 .counters {
 
-  display:
-    grid;
+  width: 100%;
+
+  max-width: 450px;
+
+  margin: 10px auto 0;
+
+  display: grid;
 
   grid-template-columns:
     1fr 1fr;
 
-  gap:
-    12px;
-
-  width:
-    100%;
-
-  max-width:
-    426px;
-
-  margin:
-    18px auto 0;
+  gap: 10px;
 
 }
 
 
 .counter {
 
+  height: 76px;
+
+  border-radius: 17px;
+
+  border:
+    1px solid
+    rgba(220,205,195,.75);
+
   background:
     rgba(255,255,255,.72);
 
-  border:
-    1px solid rgba(210,195,185,.5);
+  display: flex;
 
-  border-radius:
-    20px;
+  flex-direction: column;
 
-  padding:
-    12px 8px 14px;
+  align-items: center;
+
+  justify-content: center;
 
 }
 
 
 .counter-icon {
 
-  height:
-    30px;
+  font-size: 23px;
 
-  margin-bottom:
-    3px;
+  line-height: 20px;
 
-}
-
-
-.counter-icon svg {
-
-  width:
-    28px;
-
-  height:
-    28px;
-
-  fill:
-    none;
-
-  stroke-width:
-    2;
-
-  stroke-linecap:
-    round;
-
-  stroke-linejoin:
-    round;
+  margin-bottom: 3px;
 
 }
 
 
-.photo-counter .counter-icon svg {
+.photo-counter .counter-icon {
 
-  stroke:
-    #a37ec7;
+  color: #a483c8;
 
 }
 
 
-.video-counter .counter-icon svg {
+.video-counter .counter-icon {
 
-  stroke:
-    #db88a2;
+  color: #dc8aa4;
 
 }
 
 
 .counter-number {
 
-  font-size:
-    36px;
+  font-size: 23px;
 
-  font-weight:
-    500;
+  line-height: 24px;
 
-  line-height:
-    1;
+  font-weight: 500;
 
 }
 
 
 .photo-counter .counter-number {
 
-  color:
-    #8870ad;
+  color: #8c72a9;
 
 }
 
 
 .video-counter .counter-number {
 
-  color:
-    #d57996;
+  color: #d17d99;
 
 }
 
 
-.counter-label {
+.counter-text {
 
-  margin-top:
-    7px;
+  margin-top: 2px;
 
-  font-size:
-    12px;
+  color: #756b82;
 
-  color:
-    #777181;
+  font-size: 10px;
 
 }
 
 
-/* ============================================================
-   INFORMAÇÕES
-============================================================ */
+/* =====================================================
+   CAIXA IMPORTANTE
+===================================================== */
 
-.info {
+.important {
 
-  width:
-    100%;
+  width: 100%;
 
-  max-width:
-    426px;
+  max-width: 450px;
 
-  margin:
-    16px auto 0;
+  margin: 10px auto 0;
 
-  padding:
-    18px 14px;
+  padding: 13px 10px;
 
-  border-radius:
-    20px;
-
-  background:
-    rgba(255,255,255,.68);
+  border-radius: 17px;
 
   border:
-    1px solid rgba(210,195,185,.45);
+    1px solid
+    rgba(220,205,195,.75);
+
+  background:
+    rgba(255,255,255,.72);
 
 }
 
 
-.info-title {
+.important-title {
 
-  color:
-    #8170a4;
+  margin-bottom: 7px;
 
-  font-size:
-    16px;
+  color: #8c72a9;
 
-  font-weight:
-    600;
+  font-size: 13px;
 
-  margin-bottom:
-    9px;
+  font-weight: 600;
 
 }
 
 
-.info p {
+.important p {
 
-  margin:
-    4px 0;
+  margin: 3px 0;
 
-  font-size:
-    13px;
+  color: #756b82;
 
-  line-height:
-    1.5;
+  font-size: 11px;
 
-  color:
-    #706b7b;
+  line-height: 1.45;
 
 }
 
 
-/* ============================================================
+/* =====================================================
    STATUS
-============================================================ */
+===================================================== */
 
-.status {
+#status {
 
-  width:
-    100%;
+  min-height: 38px;
 
-  max-width:
-    426px;
+  margin-top: 11px;
 
-  margin:
-    16px auto 0;
+  padding-bottom: 5px;
 
-  min-height:
-    30px;
+  color: #756b82;
 
-  font-size:
-    13px;
+  font-size: 12px;
 
-  line-height:
-    1.5;
+  line-height: 1.5;
 
 }
 
 
-.status.success {
+.success {
 
-  color:
-    #66805f;
+  color: #71895b;
 
-  font-weight:
-    600;
+  font-weight: 600;
 
 }
 
 
-.status.error {
+.error {
 
-  color:
-    #b65d65;
+  color: #b95d70;
 
-}
-
-
-.status.uploading {
-
-  color:
-    #766d82;
+  font-weight: 600;
 
 }
 
 
-/* ============================================================
-   PROGRESSO
-============================================================ */
+.loading {
 
-.progress-container {
-
-  width:
-    100%;
-
-  max-width:
-    426px;
-
-  margin:
-    10px auto 0;
-
-  display:
-    none;
+  color: #756b82;
 
 }
 
 
-.progress-container.show {
+/* =====================================================
+   CELULAR
+===================================================== */
 
-  display:
-    block;
+@media (max-width: 480px) {
 
-}
-
-
-.progress-text {
-
-  font-size:
-    12px;
-
-  margin-bottom:
-    5px;
-
-  color:
-    #777181;
-
-}
-
-
-.progress-bar {
-
-  width:
-    100%;
-
-  height:
-    7px;
-
-  background:
-    rgba(150,140,150,.18);
-
-  border-radius:
-    20px;
-
-  overflow:
-    hidden;
-
-}
-
-
-.progress-fill {
-
-  width:
-    0%;
-
-  height:
-    100%;
-
-  background:
-    #a37ec7;
-
-  border-radius:
-    20px;
-
-  transition:
-    width .15s ease;
-
-}
-
-
-/* ============================================================
-   RESPONSIVO
-============================================================ */
-
-@media (max-width: 430px) {
-
-  .app {
+  .container {
 
     padding:
-      25px 18px 28px;
+      8px 24px 25px;
+
+  }
+
+
+  .title {
+
+    font-size: 38px;
+
+    letter-spacing: 4px;
+
+  }
+
+
+  .subtitle {
+
+    font-size: 30px;
+
+  }
+
+
+  .heart {
+
+    margin-top: 11px;
 
   }
 
 
   .intro {
 
-    margin-top:
-      38px;
+    margin:
+      39px 0 26px;
+
+    font-size: 14px;
 
   }
 
 
-  .greeting {
+  .guest-greeting {
 
-    margin-top:
-      30px;
+    margin-top: 17px;
 
-  }
-
-
-  .greeting-small {
-
-    font-size:
-      29px;
+    margin-bottom: 17px;
 
   }
 
 
-  .buttons {
+  .ola {
 
-    margin-top:
-      27px;
+    font-size: 25px;
+
+  }
+
+
+  .guest-name {
+
+    font-size: 33px;
 
   }
 
 
   .upload-button {
 
-    min-height:
-      58px;
+    height: 50px;
 
-    border-radius:
-      18px;
+    font-size: 14px;
 
-    font-size:
-      16px;
+  }
+
+
+  .counter {
+
+    height: 76px;
+
+  }
+
+
+  .important {
+
+    padding:
+      12px 8px;
 
   }
 
 }
 
 
-@media (max-width: 350px) {
+/* =====================================================
+   CELULARES PEQUENOS
+===================================================== */
 
-  .logo-title {
+@media (max-width: 380px) {
 
-    font-size:
-      34px;
+  .container {
 
-  }
+    padding-left: 18px;
 
-
-  .logo-subtitle {
-
-    font-size:
-      35px;
+    padding-right: 18px;
 
   }
 
 
-  .intro p {
+  .title {
 
-    font-size:
-      14px;
+    font-size: 35px;
+
+  }
+
+
+  .subtitle {
+
+    font-size: 28px;
+
+  }
+
+
+  .guest-name {
+
+    font-size: 30px;
 
   }
 
 
   .upload-button {
 
-    font-size:
-      14px;
+    height: 48px;
 
-    gap:
-      10px;
+    font-size: 13px;
+
+  }
+
+}
+
+
+/* =====================================================
+   CELULARES ALTOS
+===================================================== */
+
+@media (min-height: 800px) and (max-width: 480px) {
+
+  .container {
+
+    padding-top: 24px;
+
+  }
+
+
+  .intro {
+
+    margin-top: 48px;
 
   }
 
@@ -866,124 +811,147 @@ body {
 <body>
 
 
-<div class="app">
+<div class="container">
 
 
-  <!-- ========================================================
-       CABEÇALHO
-  ========================================================= -->
+  <!-- =================================================
+       TELA 1
+  ================================================== -->
 
-  <div class="logo">
+  <section id="step-name">
 
-    <h1 class="logo-title">
+
+    <h1 class="title">
       OLIVIA
     </h1>
 
-    <div class="logo-subtitle">
+
+    <div class="subtitle">
       1 aninho
     </div>
+
 
     <div class="heart">
       ♥
     </div>
 
-  </div>
 
+    <p class="intro">
 
-  <!-- ========================================================
-       TEXTO
-  ========================================================= -->
-
-  <div class="intro">
-
-    <p>
       Escolha como deseja registrar<br>
       esse momento especial.
+
     </p>
 
-  </div>
-
-
-  <!-- ========================================================
-       NOME
-  ========================================================= -->
-
-  <div class="greeting">
-
-    <div class="greeting-small">
-      Olá,
-    </div>
 
     <input
-      type="text"
-      id="guestName"
+      id="guest-name"
       class="name-input"
-      maxlength="40"
-      placeholder="Convidado!"
+      type="text"
+      placeholder="Digite seu nome"
+      maxlength="50"
       autocomplete="name"
     >
 
-  </div>
 
-
-  <!-- ========================================================
-       BOTÕES
-  ========================================================= -->
-
-  <div class="buttons">
-
-
-    <!-- FOTO -->
-
-    <label
-      class="upload-button photo-button"
+    <button
+      class="continue-button"
+      type="button"
+      onclick="continueToUpload()"
     >
 
-      <span class="icon">
+      Continuar
+
+    </button>
+
+
+  </section>
+
+
+
+  <!-- =================================================
+       TELA 2
+  ================================================== -->
+
+  <section id="step-upload">
+
+
+    <!-- NOME -->
+
+    <div class="guest-greeting">
+
+      <span class="ola">
+        Olá,
+      </span>
+
+      <span
+        id="display-name"
+        class="guest-name"
+      ></span>
+
+    </div>
+
+
+
+    <!-- =================================================
+         BOTÕES
+    ================================================== -->
+
+    <div class="buttons">
+
+
+      <!-- FOTO -->
+
+      <label
+        id="photo-button"
+        class="upload-button photo-button"
+        for="camera-photo"
+      >
 
         <svg
+          class="icon"
           viewBox="0 0 24 24"
         >
 
           <path
-            d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"
+            d="M4 7h3l2-2h6l2 2h3v12H4z"
           />
 
           <circle
             cx="12"
             cy="13"
-            r="3.5"
+            r="3"
           />
 
         </svg>
 
-      </span>
 
-      <span>
-        Tirar uma foto
-      </span>
+        <span>
+          Tirar uma foto
+        </span>
+
+      </label>
+
 
       <input
         type="file"
-        class="hidden-input"
-        id="photoInput"
+        id="camera-photo"
         accept="image/*"
         capture="environment"
-        multiple
       >
 
-    </label>
 
 
-    <!-- VÍDEO -->
+      <!-- VÍDEO -->
 
-    <label
-      class="upload-button video-button"
-    >
-
-      <span class="icon">
+      <label
+        id="video-button"
+        class="upload-button video-button"
+        for="camera-video"
+      >
 
         <svg
+          class="icon"
           viewBox="0 0 24 24"
         >
 
@@ -996,38 +964,38 @@ body {
           />
 
           <path
-            d="m16 10 5-3v10l-5-3z"
+            d="M16 10l5-3v10l-5-3z"
           />
 
         </svg>
 
-      </span>
 
-      <span>
-        Gravar vídeo (até 40s)
-      </span>
+        <span>
+          Gravar vídeo (até 40s)
+        </span>
+
+      </label>
+
 
       <input
         type="file"
-        class="hidden-input"
-        id="videoInput"
+        id="camera-video"
         accept="video/*"
         capture="environment"
-        multiple
       >
 
-    </label>
 
 
-    <!-- GALERIA -->
+      <!-- GALERIA -->
 
-    <label
-      class="upload-button gallery-button"
-    >
-
-      <span class="icon">
+      <label
+        id="gallery-button"
+        class="upload-button gallery-button"
+        for="gallery-input"
+      >
 
         <svg
+          class="icon"
           viewBox="0 0 24 24"
         >
 
@@ -1046,507 +1014,308 @@ body {
           />
 
           <path
-            d="m4 17 5-5 4 4 2-2 5 5"
+            d="M21 15l-5-5-6 6-2-2-5 5"
           />
 
         </svg>
 
-      </span>
 
-      <span>
-        Escolher da galeria
-      </span>
+        <span>
+          Escolher da galeria
+        </span>
+
+      </label>
+
+
+      <!--
+        IMPORTANTE:
+        multiple permite selecionar
+        vários arquivos de uma vez.
+      -->
 
       <input
         type="file"
-        class="hidden-input"
-        id="galleryInput"
+        id="gallery-input"
         accept="image/*,video/*"
         multiple
       >
 
-    </label>
+
+    </div>
 
 
-  </div>
+
+    <!-- =================================================
+         CONTADORES
+    ================================================== -->
+
+    <div class="counters">
 
 
-  <!-- ========================================================
-       CONTADORES
-  ========================================================= -->
+      <div class="counter photo-counter">
 
-  <div class="counters">
+        <div class="counter-icon">
+          ♧
+        </div>
 
-
-    <div class="counter photo-counter">
-
-      <div class="counter-icon">
-
-        <svg
-          viewBox="0 0 24 24"
+        <div
+          id="photos-left"
+          class="counter-number"
         >
+          10
+        </div>
 
-          <path
-            d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1Z"
-          />
-
-          <circle
-            cx="12"
-            cy="13"
-            r="3"
-          />
-
-        </svg>
+        <div class="counter-text">
+          fotos restantes
+        </div>
 
       </div>
 
-      <div
-        class="counter-number"
-        id="photosLeft"
-      >
-        10
-      </div>
-
-      <div class="counter-label">
-        fotos restantes
-      </div>
-
-    </div>
 
 
-    <div class="counter video-counter">
+      <div class="counter video-counter">
 
-      <div class="counter-icon">
+        <div class="counter-icon">
+          ♡
+        </div>
 
-        <svg
-          viewBox="0 0 24 24"
+        <div
+          id="videos-left"
+          class="counter-number"
         >
+          3
+        </div>
 
-          <rect
-            x="3"
-            y="6"
-            width="13"
-            height="12"
-            rx="2"
-          />
-
-          <path
-            d="m16 10 5-3v10l-5-3z"
-          />
-
-        </svg>
+        <div class="counter-text">
+          vídeos restantes
+        </div>
 
       </div>
 
-      <div
-        class="counter-number"
-        id="videosLeft"
-      >
-        3
+
+    </div>
+
+
+
+    <!-- =================================================
+         INFORMAÇÕES
+    ================================================== -->
+
+    <div class="important">
+
+
+      <div class="important-title">
+        ♡ Importante ♡
       </div>
 
-      <div class="counter-label">
-        vídeos restantes
-      </div>
+
+      <p>
+        Máximo de <strong>10 fotos</strong> e
+        <strong>3 vídeos</strong> por convidado.
+      </p>
+
+
+      <p>
+        Vídeos de até <strong>40 segundos</strong>.
+      </p>
+
+
+      <p>
+        Obrigado por compartilhar esse momento!
+      </p>
+
 
     </div>
 
 
-  </div>
+
+    <!-- STATUS -->
+
+    <div id="status"></div>
 
 
-  <!-- ========================================================
-       INFORMAÇÕES
-  ========================================================= -->
-
-  <div class="info">
-
-    <div class="info-title">
-      ♡ Importante ♡
-    </div>
-
-    <p>
-      Máximo de <strong>10 fotos</strong> e
-      <strong>3 vídeos</strong> por convidado.
-    </p>
-
-    <p>
-      Vídeos de até <strong>40 segundos.</strong>
-    </p>
-
-    <p style="margin-top:12px;">
-      Obrigado por compartilhar esse momento!
-    </p>
-
-  </div>
-
-
-  <!-- ========================================================
-       PROGRESSO
-  ========================================================= -->
-
-  <div
-    id="progressContainer"
-    class="progress-container"
-  >
-
-    <div
-      id="progressText"
-      class="progress-text"
-    >
-      Preparando...
-    </div>
-
-    <div class="progress-bar">
-
-      <div
-        id="progressFill"
-        class="progress-fill"
-      ></div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ========================================================
-       STATUS
-  ========================================================= -->
-
-  <div
-    id="status"
-    class="status"
-  ></div>
+  </section>
 
 
 </div>
 
 
+
 <script>
 
 
-// ============================================================
-// CONFIGURAÇÃO
-// ============================================================
+/* =====================================================
+   URL DO SEU GOOGLE APPS SCRIPT
+===================================================== */
 
 const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwxhyb0nTOHSMEbbUuzmoqgcQ7KNg2p9hVWidVdQrZDOy2FvDzSzdPoRK7SCdLAb1jY/exec";
+"https://script.google.com/macros/s/AKfycbx9NP9LJRZvfBcN4mXc_cmjBbGzn4gTlI2DCkh_Auw7jVxvNPMq7revvmq-8sWt764Y/exec";
 
+
+/* =====================================================
+   LIMITES DO SITE
+===================================================== */
 
 const MAX_PHOTOS = 10;
 
 const MAX_VIDEOS = 3;
 
-const MAX_VIDEO_SECONDS = 40;
+const MAX_TOTAL = 13;
 
 
-// ============================================================
-// TAMANHO DO BLOCO
-// ============================================================
-//
-// 1 MB.
-//
-// O arquivo nunca é carregado inteiro na memória
-// para ser enviado.
-//
-// ============================================================
+/* =====================================================
+   ELEMENTOS
+===================================================== */
 
-const CHUNK_SIZE =
-  1024 * 1024;
+const nameInput =
+document.getElementById("guest-name");
 
+const stepName =
+document.getElementById("step-name");
 
-// ============================================================
-// ELEMENTOS
-// ============================================================
+const stepUpload =
+document.getElementById("step-upload");
 
-const guestName =
-  document.getElementById(
-    "guestName"
-  );
-
-
-const photoInput =
-  document.getElementById(
-    "photoInput"
-  );
-
-
-const videoInput =
-  document.getElementById(
-    "videoInput"
-  );
-
-
-const galleryInput =
-  document.getElementById(
-    "galleryInput"
-  );
-
-
-const photosLeft =
-  document.getElementById(
-    "photosLeft"
-  );
-
-
-const videosLeft =
-  document.getElementById(
-    "videosLeft"
-  );
-
+const displayName =
+document.getElementById("display-name");
 
 const status =
-  document.getElementById(
-    "status"
-  );
+document.getElementById("status");
+
+const cameraPhoto =
+document.getElementById("camera-photo");
+
+const cameraVideo =
+document.getElementById("camera-video");
+
+const galleryInput =
+document.getElementById("gallery-input");
+
+const photosLeft =
+document.getElementById("photos-left");
+
+const videosLeft =
+document.getElementById("videos-left");
+
+const photoButton =
+document.getElementById("photo-button");
+
+const videoButton =
+document.getElementById("video-button");
+
+const galleryButton =
+document.getElementById("gallery-button");
 
 
-const progressContainer =
-  document.getElementById(
-    "progressContainer"
-  );
+/* =====================================================
+   CONTADORES
+===================================================== */
+
+let photoCount = 0;
+
+let videoCount = 0;
 
 
-const progressText =
-  document.getElementById(
-    "progressText"
-  );
+/* =====================================================
+   CHAVE POR CONVIDADO
+===================================================== */
 
+function getGuestKey(name) {
 
-const progressFill =
-  document.getElementById(
-    "progressFill"
-  );
-
-
-// ============================================================
-// NOME SALVO
-// ============================================================
-
-const savedName =
-  localStorage.getItem(
-    "oliviaGuestName"
-  );
-
-
-if (savedName) {
-
-  guestName.value =
-    savedName;
+  return String(name)
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "_");
 
 }
 
 
-// ============================================================
-// SALVAR NOME
-// ============================================================
+/* =====================================================
+   CARREGA CONTADORES DO CONVIDADO
+===================================================== */
 
-guestName.addEventListener(
-  "input",
-  function() {
+function loadGuestCounters(name) {
 
-    localStorage.setItem(
-      "oliviaGuestName",
-      guestName.value.trim()
+  const key =
+    getGuestKey(name);
+
+
+  photoCount =
+    parseInt(
+      localStorage.getItem(
+        "olivia_photos_" + key
+      ) || "0",
+      10
     );
 
-  }
-);
 
-
-// ============================================================
-// FILE INPUTS
-// ============================================================
-
-photoInput.addEventListener(
-  "change",
-  function() {
-
-    handleFiles(
-      Array.from(
-        photoInput.files
-      )
+  videoCount =
+    parseInt(
+      localStorage.getItem(
+        "olivia_videos_" + key
+      ) || "0",
+      10
     );
 
-    photoInput.value = "";
 
-  }
-);
+  updateCounters();
 
-
-videoInput.addEventListener(
-  "change",
-  function() {
-
-    handleFiles(
-      Array.from(
-        videoInput.files
-      )
-    );
-
-    videoInput.value = "";
-
-  }
-);
+}
 
 
-galleryInput.addEventListener(
-  "change",
-  function() {
+/* =====================================================
+   SALVA CONTADORES
+===================================================== */
 
-    handleFiles(
-      Array.from(
-        galleryInput.files
-      )
-    );
-
-    galleryInput.value = "";
-
-  }
-);
-
-
-// ============================================================
-// CARREGAR CONTADORES
-// ============================================================
-
-async function loadCounts() {
+function saveGuestCounters() {
 
   const name =
-    getGuestName();
-
-
-  try {
-
-    const response =
-      await fetch(
-        SCRIPT_URL,
-        {
-
-          method:
-            "POST",
-
-          headers: {
-            "Content-Type":
-              "text/plain;charset=utf-8"
-          },
-
-          body:
-            JSON.stringify({
-
-              action:
-                "counts",
-
-              userName:
-                name
-
-            })
-
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (
-      data.status ===
-      "success"
-    ) {
-
-      updateCounters(
-        data
-      );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Erro ao carregar contadores:",
-      error
+    localStorage.getItem(
+      "guestName"
     );
-
-  }
-
-}
-
-
-// ============================================================
-// ATUALIZAR CONTADORES
-// ============================================================
-
-function updateCounters(
-  data
-) {
-
-  photosLeft.textContent =
-    Math.max(
-      0,
-      Number(
-        data.photosLeft || 0
-      )
-    );
-
-
-  videosLeft.textContent =
-    Math.max(
-      0,
-      Number(
-        data.videosLeft || 0
-      )
-    );
-
-}
-
-
-// ============================================================
-// NOME
-// ============================================================
-
-function getGuestName() {
-
-  const name =
-    guestName.value.trim();
 
 
   if (!name) {
-
-    return "Convidado";
-
-  }
-
-
-  return name;
-
-}
-
-
-// ============================================================
-// HANDLE DOS ARQUIVOS
-// ============================================================
-
-async function handleFiles(
-  files
-) {
-
-  if (!files.length) {
     return;
   }
 
 
+  const key =
+    getGuestKey(name);
+
+
+  localStorage.setItem(
+    "olivia_photos_" + key,
+    photoCount
+  );
+
+
+  localStorage.setItem(
+    "olivia_videos_" + key,
+    videoCount
+  );
+
+}
+
+
+/* =====================================================
+   CONTINUAR
+===================================================== */
+
+function continueToUpload() {
+
+
   const name =
-    guestName.value.trim();
+    nameInput.value.trim();
 
 
   if (!name) {
 
     alert(
-      "Por favor, coloque seu nome antes de enviar os arquivos."
+      "Por favor, digite seu nome."
     );
 
-    guestName.focus();
+    nameInput.focus();
 
     return;
 
@@ -1554,133 +1323,301 @@ async function handleFiles(
 
 
   localStorage.setItem(
-    "oliviaGuestName",
+    "guestName",
     name
   );
 
 
-  // ----------------------------------------------------------
-  // CARREGA CONTADORES ATUAIS
-  // ----------------------------------------------------------
-
-  await loadCounts();
+  displayName.textContent =
+    name;
 
 
-  let availablePhotos =
-    Number(
-      photosLeft.textContent
-    );
+  loadGuestCounters(
+    name
+  );
 
 
-  let availableVideos =
-    Number(
-      videosLeft.textContent
-    );
+  stepName.style.display =
+    "none";
 
 
-  // ----------------------------------------------------------
-  // FILTRA ARQUIVOS
-  // ----------------------------------------------------------
-
-  const queue = [];
+  stepUpload.style.display =
+    "block";
 
 
-  for (
-    const file of files
-  ) {
-
-    const isPhoto =
-      file.type.startsWith(
-        "image/"
-      );
+}
 
 
-    const isVideo =
-      file.type.startsWith(
-        "video/"
-      );
+/* =====================================================
+   ENTER NO NOME
+===================================================== */
 
+nameInput.addEventListener(
+  "keydown",
+  function(event) {
 
-    if (!isPhoto && !isVideo) {
+    if (
+      event.key === "Enter"
+    ) {
 
-      continue;
-
-    }
-
-
-    // --------------------------------------------------------
-    // FOTO
-    // --------------------------------------------------------
-
-    if (isPhoto) {
-
-      if (
-        availablePhotos <= 0
-      ) {
-
-        continue;
-
-      }
-
-
-      queue.push(
-        file
-      );
-
-      availablePhotos--;
-
-      continue;
-
-    }
-
-
-    // --------------------------------------------------------
-    // VÍDEO
-    // --------------------------------------------------------
-
-    if (isVideo) {
-
-      if (
-        availableVideos <= 0
-      ) {
-
-        continue;
-
-      }
-
-
-      const valid =
-        await validateVideoDuration(
-          file
-        );
-
-
-      if (!valid) {
-
-        alert(
-          `"${file.name}" ultrapassa 40 segundos e não será enviado.`
-        );
-
-        continue;
-
-      }
-
-
-      queue.push(
-        file
-      );
-
-      availableVideos--;
+      continueToUpload();
 
     }
 
   }
+);
 
 
-  if (!queue.length) {
+/* =====================================================
+   SE JÁ TEM NOME SALVO
+===================================================== */
+
+const savedName =
+localStorage.getItem(
+  "guestName"
+);
+
+
+if (savedName) {
+
+  displayName.textContent =
+    savedName;
+
+  loadGuestCounters(
+    savedName
+  );
+
+  stepName.style.display =
+    "none";
+
+  stepUpload.style.display =
+    "block";
+
+}
+
+
+/* =====================================================
+   ATUALIZA CONTADORES
+===================================================== */
+
+function updateCounters() {
+
+
+  const photosRemaining =
+    Math.max(
+      0,
+      MAX_PHOTOS - photoCount
+    );
+
+
+  const videosRemaining =
+    Math.max(
+      0,
+      MAX_VIDEOS - videoCount
+    );
+
+
+  photosLeft.textContent =
+    photosRemaining;
+
+
+  videosLeft.textContent =
+    videosRemaining;
+
+
+  const total =
+    photoCount +
+    videoCount;
+
+
+  /* FOTO */
+
+  if (
+    photosRemaining <= 0 ||
+    total >= MAX_TOTAL
+  ) {
+
+    photoButton.classList.add(
+      "disabled"
+    );
+
+  } else {
+
+    photoButton.classList.remove(
+      "disabled"
+    );
+
+  }
+
+
+  /* VIDEO */
+
+  if (
+    videosRemaining <= 0 ||
+    total >= MAX_TOTAL
+  ) {
+
+    videoButton.classList.add(
+      "disabled"
+    );
+
+  } else {
+
+    videoButton.classList.remove(
+      "disabled"
+    );
+
+  }
+
+
+  /* GALERIA */
+
+  if (
+    total >= MAX_TOTAL
+  ) {
+
+    galleryButton.classList.add(
+      "disabled"
+    );
+
+  } else {
+
+    galleryButton.classList.remove(
+      "disabled"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   FOTO
+===================================================== */
+
+cameraPhoto.addEventListener(
+  "change",
+  function() {
+
+    const files =
+      Array.from(
+        this.files
+      );
+
+
+    if (!files.length) {
+      return;
+    }
+
+
+    processFiles(
+      files
+    );
+
+
+    this.value = "";
+
+  }
+);
+
+
+/* =====================================================
+   VÍDEO
+===================================================== */
+
+cameraVideo.addEventListener(
+  "change",
+  function() {
+
+    const files =
+      Array.from(
+        this.files
+      );
+
+
+    if (!files.length) {
+      return;
+    }
+
+
+    processFiles(
+      files
+    );
+
+
+    this.value = "";
+
+  }
+);
+
+
+/* =====================================================
+   GALERIA
+===================================================== */
+
+galleryInput.addEventListener(
+  "change",
+  function() {
+
+    const files =
+      Array.from(
+        this.files
+      );
+
+
+    if (!files.length) {
+      return;
+    }
+
+
+    processFiles(
+      files
+    );
+
+
+    this.value = "";
+
+  }
+);
+
+
+/* =====================================================
+   PROCESSA OS ARQUIVOS
+===================================================== */
+
+async function processFiles(files) {
+
+
+  const totalAtual =
+    photoCount +
+    videoCount;
+
+
+  const totalSelecionado =
+    files.length;
+
+
+  /*
+    PRIMEIRO:
+    verifica o limite total.
+  */
+
+  if (
+    totalAtual +
+    totalSelecionado >
+    MAX_TOTAL
+  ) {
+
+    const restantes =
+      MAX_TOTAL -
+      totalAtual;
+
 
     alert(
-      "Nenhum arquivo disponível para envio. Verifique os limites de fotos e vídeos."
+      "Você pode enviar no máximo 13 arquivos por convidado.\n\n" +
+      "Você ainda pode enviar " +
+      restantes +
+      " arquivo(s)."
     );
 
     return;
@@ -1688,562 +1625,402 @@ async function handleFiles(
   }
 
 
-  // ----------------------------------------------------------
-  // ENVIA FILA
-  // ----------------------------------------------------------
+  /*
+    Conta fotos e vídeos
+    selecionados.
+  */
 
-  await uploadQueue(
-    queue
-  );
+  let selectedPhotos = 0;
 
-}
-
-
-// ============================================================
-// VALIDAR VÍDEO
-// ============================================================
-
-function validateVideoDuration(
-  file
-) {
-
-  return new Promise(
-    function(resolve) {
-
-      const video =
-        document.createElement(
-          "video"
-        );
+  let selectedVideos = 0;
 
 
-      const url =
-        URL.createObjectURL(
-          file
-        );
+  files.forEach(
+    function(file) {
+
+      if (
+        file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        selectedPhotos++;
+
+      }
 
 
-      video.preload =
-        "metadata";
+      else if (
+        file.type.startsWith(
+          "video/"
+        )
+      ) {
 
+        selectedVideos++;
 
-      video.onloadedmetadata =
-        function() {
-
-          const duration =
-            video.duration;
-
-
-          URL.revokeObjectURL(
-            url
-          );
-
-
-          if (
-            !isFinite(duration)
-          ) {
-
-            resolve(false);
-
-            return;
-
-          }
-
-
-          resolve(
-            duration <=
-            MAX_VIDEO_SECONDS
-          );
-
-        };
-
-
-      video.onerror =
-        function() {
-
-          URL.revokeObjectURL(
-            url
-          );
-
-          // Se o navegador não conseguir
-          // ler os metadados, não enviamos
-          // para evitar vídeo acima do limite.
-
-          resolve(false);
-
-        };
-
-
-      video.src =
-        url;
+      }
 
     }
   );
 
-}
+
+  /*
+    Verifica limite de fotos.
+  */
+
+  if (
+    photoCount +
+    selectedPhotos >
+    MAX_PHOTOS
+  ) {
+
+    alert(
+      "O limite é de 10 fotos por convidado."
+    );
+
+    return;
+
+  }
 
 
-// ============================================================
-// FILA DE UPLOAD
-// ============================================================
+  /*
+    Verifica limite de vídeos.
+  */
 
-async function uploadQueue(
-  queue
-) {
+  if (
+    videoCount +
+    selectedVideos >
+    MAX_VIDEOS
+  ) {
 
-  progressContainer.classList.add(
-    "show"
-  );
+    alert(
+      "O limite é de 3 vídeos por convidado."
+    );
+
+    return;
+
+  }
 
 
-  let successful =
-    0;
+  /*
+    Arquivos inválidos.
+  */
+
+  const invalidFiles =
+    files.filter(
+      function(file) {
+
+        return !file.type.startsWith("image/") &&
+               !file.type.startsWith("video/");
+
+      }
+    );
 
 
-  let failed =
-    0;
+  if (
+    invalidFiles.length > 0
+  ) {
+
+    alert(
+      "Um ou mais arquivos selecionados não são fotos ou vídeos."
+    );
+
+    return;
+
+  }
+
+
+  /*
+    ENVIA UM POR UM.
+
+    Isso é importante para não mandar
+    vários arquivos enormes dentro de
+    uma única requisição.
+  */
+
+  let enviados = 0;
+
+  let erros = 0;
+
+
+  status.innerHTML =
+    `<span class="loading">
+      Preparando arquivos...
+    </span>`;
 
 
   for (
     let i = 0;
-    i < queue.length;
+    i < files.length;
     i++
   ) {
 
+
     const file =
-      queue[i];
+      files[i];
 
 
-    progressText.textContent =
-      `Enviando ${i + 1} de ${queue.length}: ${file.name}`;
-
-
-    progressFill.style.width =
-      "0%";
-
-
-    status.className =
-      "status uploading";
-
-
-    status.textContent =
-      "Preparando arquivo...";
+    status.innerHTML =
+      `<span class="loading">
+        Enviando ${i + 1} de ${files.length}...
+      </span>`;
 
 
     try {
+
 
       await uploadFile(
         file
       );
 
 
-      successful++;
+      /*
+        Só aumenta o contador
+        depois de receber sucesso.
+      */
+
+      if (
+        file.type.startsWith(
+          "image/"
+        )
+      ) {
+
+        photoCount++;
+
+      }
 
 
-      status.className =
-        "status success";
+      else if (
+        file.type.startsWith(
+          "video/"
+        )
+      ) {
+
+        videoCount++;
+
+      }
 
 
-      status.textContent =
-        `✓ ${file.name} enviado com sucesso.`;
+      saveGuestCounters();
+
+      updateCounters();
 
 
-      await loadCounts();
+      enviados++;
 
 
     } catch (error) {
 
+
       console.error(
+        "Erro:",
         error
       );
 
 
-      failed++;
-
-
-      status.className =
-        "status error";
-
-
-      status.textContent =
-        `✕ Erro em "${file.name}": ${error.message}`;
+      erros++;
 
     }
 
   }
 
 
-  progressContainer.classList.remove(
-    "show"
-  );
-
+  /*
+    RESULTADO FINAL
+  */
 
   if (
-    failed === 0
+    erros === 0
   ) {
 
-    status.className =
-      "status success";
+    status.innerHTML =
+      `<div class="success">
+        ✓ ${enviados} arquivo(s) enviado(s) com sucesso!
+      </div>`;
 
+  }
 
-    status.textContent =
-      successful === 1
-        ? "✨ Arquivo enviado com sucesso! Obrigado por compartilhar esse momento!"
-        : `✨ ${successful} arquivos enviados com sucesso! Obrigado por compartilhar esse momento!`;
+  else {
 
-  } else {
-
-    status.className =
-      "status error";
-
-
-    status.textContent =
-      `${successful} arquivo(s) enviado(s) e ${failed} não enviado(s). Veja a mensagem acima para identificar o problema.`;
+    status.innerHTML =
+      `<div class="error">
+        ${enviados} arquivo(s) enviado(s).
+        <br>
+        ${erros} arquivo(s) não puderam ser enviados.
+      </div>`;
 
   }
 
 
-  await loadCounts();
+  updateCounters();
 
 }
 
 
-// ============================================================
-// UPLOAD DE UM ARQUIVO
-// ============================================================
+/* =====================================================
+   ENVIA ARQUIVO PARA O GOOGLE APPS SCRIPT
+===================================================== */
 
-async function uploadFile(
-  file
-) {
+function uploadFile(file) {
 
-  // ----------------------------------------------------------
-  // INICIAR SESSÃO
-  // ----------------------------------------------------------
-
-  const initResponse =
-    await fetch(
-      SCRIPT_URL,
-      {
-
-        method:
-          "POST",
-
-        headers: {
-
-          "Content-Type":
-            "text/plain;charset=utf-8"
-
-        },
-
-        body:
-          JSON.stringify({
-
-            action:
-              "init",
-
-            userName:
-              getGuestName(),
-
-            fileName:
-              file.name,
-
-            mimeType:
-              file.type,
-
-            fileSize:
-              file.size
-
-          })
-
-      }
-    );
-
-
-  if (!initResponse.ok) {
-
-    throw new Error(
-      `Servidor respondeu HTTP ${initResponse.status}.`
-    );
-
-  }
-
-
-  const initData =
-    await initResponse.json();
-
-
-  // ----------------------------------------------------------
-  // LIMITE
-  // ----------------------------------------------------------
-
-  if (
-    initData.status ===
-    "limit_reached"
-  ) {
-
-    throw new Error(
-      initData.message
-    );
-
-  }
-
-
-  // ----------------------------------------------------------
-  // ERRO
-  // ----------------------------------------------------------
-
-  if (
-    initData.status !==
-    "upload_initialized"
-  ) {
-
-    throw new Error(
-
-      initData.message ||
-      "Não foi possível iniciar o upload."
-
-    );
-
-  }
-
-
-  const uploadUrl =
-    initData.uploadUrl;
-
-
-  if (!uploadUrl) {
-
-    throw new Error(
-      "O servidor não forneceu a URL de upload."
-    );
-
-  }
-
-
-  // ----------------------------------------------------------
-  // ENVIA BLOCOS
-  // ----------------------------------------------------------
-
-  let start =
-    0;
-
-
-  while (
-    start <
-    file.size
-  ) {
-
-    const end =
-      Math.min(
-        start +
-        CHUNK_SIZE,
-        file.size
-      ) - 1;
-
-
-    const chunk =
-      file.slice(
-        start,
-        end + 1
-      );
-
-
-    const base64 =
-      await blobToBase64(
-        chunk
-      );
-
-
-    const response =
-      await fetch(
-        SCRIPT_URL,
-        {
-
-          method:
-            "POST",
-
-          headers: {
-
-            "Content-Type":
-              "text/plain;charset=utf-8"
-
-          },
-
-          body:
-            JSON.stringify({
-
-              action:
-                "chunk",
-
-              uploadUrl:
-                uploadUrl,
-
-              start:
-                start,
-
-              end:
-                end,
-
-              total:
-                file.size,
-
-              base64:
-                base64
-
-            })
-
-        }
-      );
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        `Servidor respondeu HTTP ${response.status} no bloco.`
-      );
-
-    }
-
-
-    const data =
-      await response.json();
-
-
-    // --------------------------------------------------------
-    // ERRO
-    // --------------------------------------------------------
-
-    if (
-      data.status ===
-      "error"
-    ) {
-
-      throw new Error(
-        data.message ||
-        "Erro no processamento do arquivo."
-      );
-
-    }
-
-
-    // --------------------------------------------------------
-    // FINALIZADO
-    // --------------------------------------------------------
-
-    if (
-      data.status ===
-      "success" &&
-      data.completed
-    ) {
-
-      progressFill.style.width =
-        "100%";
-
-
-      return data;
-
-    }
-
-
-    // --------------------------------------------------------
-    // PRÓXIMO BLOCO
-    // --------------------------------------------------------
-
-    if (
-      typeof data.nextStart ===
-      "number"
-    ) {
-
-      start =
-        data.nextStart;
-
-    } else {
-
-      start =
-        end + 1;
-
-    }
-
-
-    // --------------------------------------------------------
-    // PROGRESSO
-    // --------------------------------------------------------
-
-    const percentage =
-      Math.min(
-        100,
-        (
-          start /
-          file.size
-        ) *
-        100
-      );
-
-
-    progressFill.style.width =
-      percentage.toFixed(1) +
-      "%";
-
-
-    progressText.textContent =
-      `Enviando: ${file.name} — ${percentage.toFixed(0)}%`;
-
-  }
-
-
-  return {
-    status:
-      "success"
-  };
-
-}
-
-
-// ============================================================
-// BLOB -> BASE64
-// ============================================================
-
-function blobToBase64(
-  blob
-) {
 
   return new Promise(
     function(resolve, reject) {
+
 
       const reader =
         new FileReader();
 
 
       reader.onload =
-        function() {
-
-          const result =
-            reader.result;
+        async function(event) {
 
 
-          const comma =
-            result.indexOf(",");
+          try {
 
 
-          if (
-            comma === -1
-          ) {
+            const result =
+              event.target.result;
 
-            reject(
-              new Error(
-                "Não foi possível preparar o bloco do arquivo."
-              )
+
+            const base64 =
+              result.split(",")[1];
+
+
+            if (!base64) {
+
+              reject(
+                new Error(
+                  "Não foi possível ler o arquivo."
+                )
+              );
+
+              return;
+
+            }
+
+
+            const guestName =
+              localStorage.getItem(
+                "guestName"
+              ) ||
+              "Convidado";
+
+
+            /*
+              EXATAMENTE os campos
+              esperados pelo seu
+              doPost(e).
+            */
+
+            const payload = {
+
+              userName:
+                guestName,
+
+              fileName:
+                file.name,
+
+              mimeType:
+                file.type,
+
+              base64:
+                base64
+
+            };
+
+
+            /*
+              Não usamos headers
+              personalizados.
+
+              Isso evita preflight/CORS
+              desnecessário no Apps Script.
+            */
+
+            const response =
+              await fetch(
+                SCRIPT_URL,
+                {
+
+                  method:
+                    "POST",
+
+                  body:
+                    JSON.stringify(
+                      payload
+                    )
+
+                }
+              );
+
+
+            const text =
+              await response.text();
+
+
+            console.log(
+              "Resposta Google Apps Script:",
+              text
             );
 
-            return;
+
+            let data;
+
+
+            try {
+
+              data =
+                JSON.parse(
+                  text
+                );
+
+            }
+
+            catch (error) {
+
+              reject(
+                new Error(
+                  "O Google não retornou uma resposta JSON válida."
+                )
+              );
+
+              return;
+
+            }
+
+
+            if (
+              data.status ===
+              "success"
+            ) {
+
+              resolve(
+                data
+              );
+
+            }
+
+            else {
+
+              reject(
+                new Error(
+                  data.message ||
+                  "Erro ao salvar arquivo."
+                )
+              );
+
+            }
+
 
           }
 
+          catch (error) {
 
-          resolve(
-            result.substring(
-              comma + 1
-            )
-          );
+            reject(
+              error
+            );
+
+          }
 
         };
 
@@ -2253,7 +2030,7 @@ function blobToBase64(
 
           reject(
             new Error(
-              "Erro ao ler o bloco do arquivo."
+              "Não foi possível ler o arquivo."
             )
           );
 
@@ -2261,8 +2038,9 @@ function blobToBase64(
 
 
       reader.readAsDataURL(
-        blob
+        file
       );
+
 
     }
   );
@@ -2270,14 +2048,15 @@ function blobToBase64(
 }
 
 
-// ============================================================
-// INICIALIZA
-// ============================================================
+/* =====================================================
+   INICIA CONTADORES
+===================================================== */
 
-loadCounts();
+updateCounters();
 
 
 </script>
+
 
 </body>
 
