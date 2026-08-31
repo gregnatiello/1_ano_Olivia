@@ -1928,6 +1928,7 @@ async function handleFiles(input) {
   // -------------------------------------------------------
 
   let successful = 0;
+  let lastErrorMessage = "";
 
   for (let i = 0; i < validFiles.length; i++) {
     const file = validFiles[i];
@@ -1948,8 +1949,9 @@ async function handleFiles(input) {
       updateCounters();
 
     } catch (error) {
-      console.error(error);
-      setStatus('❌ Não foi possível enviar "' + file.name + '". ' + (error.message || ""));
+      console.error("Falha no envio de " + file.name + ":", error);
+      lastErrorMessage = error && error.message ? error.message : String(error);
+      setStatus('❌ Não foi possível enviar "' + file.name + '". ' + lastErrorMessage);
     }
   }
 
@@ -1958,9 +1960,9 @@ async function handleFiles(input) {
   if (successful === validFiles.length) {
     setStatus('✨ ' + successful + ' arquivo(s) enviado(s) com sucesso! Obrigado por compartilhar esse momento!');
   } else if (successful > 0) {
-    setStatus('⚠️ ' + successful + ' arquivo(s) foram enviados. Alguns arquivos não puderam ser enviados.');
+    setStatus('⚠️ ' + successful + ' de ' + validFiles.length + ' arquivo(s) enviados. Motivo da falha: ' + lastErrorMessage);
   } else {
-    setStatus("❌ Não foi possível enviar os arquivos.");
+    setStatus("❌ Não foi possível enviar os arquivos. Motivo: " + (lastErrorMessage || "erro desconhecido") + ". Verifique sua conexão e tente novamente.");
   }
 
   await syncCounters();
