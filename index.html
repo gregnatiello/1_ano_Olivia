@@ -1524,11 +1524,19 @@ const SCRIPT_URL =
 
 const MAX_PHOTOS = 10;
 const MAX_VIDEOS = 3;
-const MAX_VIDEO_DURATION = 40; // segundos
+const MAX_VIDEO_DURATION = 40; // segundos (limite mostrado ao convidado)
 
-// 4 MB é múltiplo de 256 KB, exigido pelo upload
-// resumível do Google Drive.
-const CHUNK_SIZE = 4 * 1024 * 1024;
+// Pequena margem de tolerância: celulares às vezes gravam
+// um vídeo "de 40s" com duração real de 40,x segundos por
+// causa de arredondamento na gravação. Isso evita bloquear
+// um vídeo que na prática está dentro do combinado.
+const VIDEO_DURATION_TOLERANCE = 1; // segundos extras permitidos
+
+// Tamanho de cada bloco enviado. Precisa ser múltiplo de
+// 256 KB (exigido pelo upload resumível do Google Drive).
+// Blocos maiores = menos idas e vindas = upload mais rápido,
+// mas exige uma conexão minimamente estável para cada bloco.
+const CHUNK_SIZE = 8 * 1024 * 1024;
 
 
 /* =========================================================
@@ -1894,7 +1902,7 @@ function validateVideoDuration(file) {
       URL.revokeObjectURL(objectUrl);
 
       resolve(
-        Number.isFinite(duration) && duration <= MAX_VIDEO_DURATION
+        Number.isFinite(duration) && duration <= (MAX_VIDEO_DURATION + VIDEO_DURATION_TOLERANCE)
       );
     };
 
