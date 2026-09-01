@@ -1536,8 +1536,24 @@ const VIDEO_DURATION_TOLERANCE = 1; // segundos extras permitidos
 // 256 KB (exigido pelo upload resumível do Google Drive).
 // Blocos maiores = menos idas e vindas = upload mais rápido,
 // mas exige uma conexão minimamente estável para cada bloco.
-const CHUNK_SIZE = 8 * 1024 * 1024;
 
+//const CHUNK_SIZE = 8 * 1024 * 1024;
+
+// =========================================================
+// UPLOAD ADAPTATIVO
+// O tamanho do bloco se ajusta automaticamente à conexão.
+// Começa em 8 MB e pode chegar a 20 MB.
+//
+// Todos os tamanhos são múltiplos de 256 KB,
+// conforme exigido pelo upload resumível do Google Drive.
+// =========================================================
+
+const MIN_CHUNK_SIZE = 2 * 1024 * 1024;   // 2 MB
+const START_CHUNK_SIZE = 8 * 1024 * 1024; // 8 MB
+const MAX_CHUNK_SIZE = 20 * 1024 * 1024;  // 20 MB
+const CHUNK_STEP = 2 * 1024 * 1024;       // 2 MB
+
+let adaptiveChunkSize = START_CHUNK_SIZE;
 
 /* =========================================================
    ELEMENTOS
@@ -1851,40 +1867,151 @@ async function sendChunk(uploadUrl, start, end, total, base64) {
    UPLOAD COMPLETO DE UM ARQUIVO
 ========================================================= */
 
+/* =========================================================
+   UPLOAD COMPLETO DE UM ARQUIVO
+
+   UPLOAD ADAPTATIVO:
+   - conexão rápida  -> aumenta o bloco
+   - conexão lenta   -> reduz o bloco
+   - erro            -> reduz o bloco
+   - sucesso rápido  -> aumenta o bloco
+
+   O tamanho é mantido durante o arquivo e vai se adaptando
+   conforme o desempenho real daquela conexão.
+========================================================= */
+
 async function uploadFile(file, userName, onProgress) {
+
   const init = await initializeUpload(file, userName);
+
   const uploadUrl = init.uploadUrl;
 
-  let start = 0;
   const total = file.size;
 
+  let start = 0;
+
   while (start < total) {
-    const end = Math.min(start + CHUNK_SIZE - 1, total - 1);
+
+    const currentChunkSize = Math.min(
+      adaptiveChunkSize,
+      total - start
+    );
+
+    const end = Math.min(
+      start + currentChunkSize - 1,
+      total - 1
+    );
+
     const chunk = file.slice(start, end + 1);
-    const base64 = await blobToBase64(chunk);
 
-    const result = await sendChunk(uploadUrl, start, end, total, base64);
+    const chunkStartTime = performance.now();
 
-    let uploaded = end + 1;
+    try {
 
-    if (typeof result.nextStart === "number") {
-      uploaded = result.nextStart;
+      const base64 = await blobToBase64(chunk);
+
+      const result = await sendChunk(
+        uploadUrl,
+        start,
+        end,
+        total,
+        base64
+      );
+
+      const chunkEndTime = performance.now();
+
+      const elapsedSeconds =
+        (chunkEndTime - chunkStartTime) / 1000;
+
+      const uploadedBytes = end - start + 1;
+
+      const speedMbps =
+        (uploadedBytes / 1024 / 1024) /
+        Math.max(elapsedSeconds, 0.1);
+
+      let uploaded = end + 1;
+
+      if (typeof result.nextStart === "number") {
+        uploaded = result.nextStart;
+      }
+
+      const percent = Math.min(
+        100,
+        Math.round((uploaded / total) * 100)
+      );
+
+      if (onProgress) {
+        onProgress(percent);
+      }
+
+      // ---------------------------------------------------
+      // UPLOAD TERMINOU
+      // ---------------------------------------------------
+
+      if (result.status === "success") {
+        return result;
+      }
+
+      // ---------------------------------------------------
+      // AJUSTE AUTOMÁTICO DO TAMANHO
+      // ---------------------------------------------------
+
+      if (speedMbps >= 8) {
+
+        // Conexão muito rápida:
+        // aumenta agressivamente.
+        adaptiveChunkSize = Math.min(
+          MAX_CHUNK_SIZE,
+          adaptiveChunkSize + CHUNK_STEP
+        );
+
+      } else if (speedMbps >= 3) {
+
+        // Conexão boa:
+        // aumenta de forma moderada.
+        adaptiveChunkSize = Math.min(
+          MAX_CHUNK_SIZE,
+          adaptiveChunkSize + (CHUNK_STEP / 2)
+        );
+
+      } else if (speedMbps < 1) {
+
+        // Conexão lenta:
+        // reduz para diminuir o risco de perder
+        // um bloco grande.
+        adaptiveChunkSize = Math.max(
+          MIN_CHUNK_SIZE,
+          adaptiveChunkSize - CHUNK_STEP
+        );
+      }
+
+      start = uploaded;
+
+    } catch (error) {
+
+      // ---------------------------------------------------
+      // FALHA:
+      // reduz o tamanho do bloco antes de tentar novamente.
+      // ---------------------------------------------------
+
+      adaptiveChunkSize = Math.max(
+        MIN_CHUNK_SIZE,
+        adaptiveChunkSize - CHUNK_STEP
+      );
+
+      console.warn(
+        "Falha no bloco. Novo tamanho:",
+        Math.round(adaptiveChunkSize / 1024 / 1024) + " MB"
+      );
+
+      throw error;
     }
-
-    const percent = Math.min(100, Math.round((uploaded / total) * 100));
-
-    if (onProgress) onProgress(percent);
-
-    if (result.status === "success") {
-      return result;
-    }
-
-    start = end + 1;
   }
 
-  return { status: "success" };
+  return {
+    status: "success"
+  };
 }
-
 
 /* =========================================================
    VALIDAR DURAÇÃO DO VÍDEO
