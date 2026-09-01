@@ -759,12 +759,15 @@ const VIDEO_DURATION_TOLERANCE = 1;
 
 /* =========================================================
    UPLOAD RÁPIDO
-   Blocos grandes reduzem o número de requisições.
+   Todo arquivo já começa direto no bloco grande (32 MB) -
+   menos requisições desde o primeiro byte. Se algum bloco
+   falhar de verdade, cai para um bloco menor (mais seguro)
+   só até a próxima tentativa se recuperar.
 ========================================================= */
 
-const CHUNK_SIZE = 16 * 1024 * 1024;
 const FAST_CHUNK_SIZE = 32 * 1024 * 1024;
-let currentChunkSize = CHUNK_SIZE;
+const SAFE_CHUNK_SIZE = 8 * 1024 * 1024;
+let currentChunkSize = FAST_CHUNK_SIZE;
 
 // Quantos arquivos sobem AO MESMO TEMPO quando o convidado
 // seleciona vários de uma vez (galeria). Aumentado de 3 para
@@ -991,13 +994,14 @@ function wait(ms) {
    FAZER UMA REQUISIÇÃO COM TENTATIVAS AUTOMÁTICAS
 ========================================================= */
 
-async function fetchWithRetry(body, maxAttempts) {
+async function fetchWithRetry(body, maxAttempts, url) {
   maxAttempts = maxAttempts || 3;
+  const targetUrl = url || SCRIPT_URL;
   let lastError;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await fetch(SCRIPT_URL, {
+      const response = await fetch(targetUrl, {
         method: "POST",
         body: body
       });
@@ -1054,19 +1058,24 @@ async function initializeUpload(file, userName) {
 
 /* =========================================================
    ENVIAR UM BLOCO
+   Metadados vão na URL (query string); o base64 do bloco
+   vai puro no corpo da requisição (texto simples), evitando
+   o desperdício extra de espaço que o URLSearchParams causa
+   em caracteres especiais do base64 (+, /, =).
 ========================================================= */
 
 async function sendChunk(uploadUrl, start, end, total, base64) {
-  const body = new URLSearchParams({
+  const query = new URLSearchParams({
     action: "chunk",
     uploadUrl: uploadUrl,
     start: String(start),
     end: String(end),
-    total: String(total),
-    base64: base64
+    total: String(total)
   });
 
-  const data = await fetchWithRetry(body);
+  const url = SCRIPT_URL + "?" + query.toString();
+
+  const data = await fetchWithRetry(base64, 3, url);
 
   if (data.status !== "chunk_received" && data.status !== "success") {
     throw new Error(data.message || "Erro ao enviar bloco.");
@@ -1114,9 +1123,9 @@ async function uploadFile(file, userName, onProgress) {
         return result;
       }
 
-      // Só aumenta o bloco depois de um envio concluído com
-      // sucesso - favorece conexões rápidas sem arriscar
-      // um bloco grande logo de cara.
+      // Depois de um bloco concluído com sucesso, garante
+      // que continua no tamanho rápido (caso tenha encolhido
+      // por uma falha anterior).
       if (currentChunkSize < FAST_CHUNK_SIZE) {
         currentChunkSize = FAST_CHUNK_SIZE;
       }
@@ -1126,7 +1135,7 @@ async function uploadFile(file, userName, onProgress) {
     } catch (error) {
       // Falha real: volta para um bloco menor e deixa o
       // retry cuidar da tentativa seguinte.
-      currentChunkSize = 8 * 1024 * 1024;
+      currentChunkSize = SAFE_CHUNK_SIZE;
       throw error;
     }
   }
