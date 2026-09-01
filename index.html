@@ -1052,17 +1052,24 @@ async function initializeUpload(file, userName) {
    ENVIAR UM BLOCO
 ========================================================= */
 
-async function sendChunk(uploadUrl, start, end, total, base64) {
-  const body = new URLSearchParams({
-    action: "chunk",
-    uploadUrl: uploadUrl,
-    start: String(start),
-    end: String(end),
-    total: String(total),
-    base64: base64
-  });
+/* =========================================================
+   ENVIAR UM BLOCO
+   Envia o bloco como binário puro (multipart/form-data),
+   sem conversão para base64 - isso reduz o volume de dados
+   transferidos em ~25-33% comparado ao formato anterior,
+   sem abrir mão de passar tudo pelo servidor protegido.
+========================================================= */
 
-  const data = await fetchWithRetry(body);
+async function sendChunk(uploadUrl, start, end, total, chunkBlob) {
+  const formData = new FormData();
+  formData.append("action", "chunk");
+  formData.append("uploadUrl", uploadUrl);
+  formData.append("start", String(start));
+  formData.append("end", String(end));
+  formData.append("total", String(total));
+  formData.append("chunk", chunkBlob, "chunk.bin");
+
+  const data = await fetchWithRetry(formData);
 
   if (data.status !== "chunk_received" && data.status !== "success") {
     throw new Error(data.message || "Erro ao enviar bloco.");
@@ -1093,8 +1100,7 @@ async function uploadFile(file, userName, onProgress) {
     const chunk = file.slice(start, end + 1);
 
     try {
-      const base64 = await blobToBase64(chunk);
-      const result = await sendChunk(uploadUrl, start, end, total, base64);
+      const result = await sendChunk(uploadUrl, start, end, total, chunk);
 
       let uploaded = end + 1;
 
@@ -1158,6 +1164,80 @@ function validateVideoDuration(file) {
     };
 
     video.src = objectUrl;
+  });
+}
+
+
+/* =========================================================
+   OTIMIZAR FOTO ANTES DE ENVIAR
+   Reduz fotos muito grandes (comuns em câmeras de celular)
+   para um tamanho ainda ótimo de visualização, cortando bem
+   o tempo de envio - principal ganho em lotes de galeria.
+   Vídeos não são tocados. Se algo der errado na otimização
+   (formato não suportado pelo navegador, etc.), a foto
+   original é enviada normalmente - nunca trava o envio.
+========================================================= */
+
+const MAX_PHOTO_DIMENSION = 1920; // pixels, no lado maior
+const PHOTO_JPEG_QUALITY = 0.82;
+
+function compressImage(file) {
+  return new Promise(function(resolve) {
+    if (!file.type.startsWith("image/")) {
+      resolve(file);
+      return;
+    }
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = function() {
+      URL.revokeObjectURL(objectUrl);
+
+      const width = img.naturalWidth;
+      const height = img.naturalHeight;
+
+      if (!width || !height || Math.max(width, height) <= MAX_PHOTO_DIMENSION) {
+        // já está pequena o suficiente - envia como está
+        resolve(file);
+        return;
+      }
+
+      const scale = MAX_PHOTO_DIMENSION / Math.max(width, height);
+      const newWidth = Math.round(width * scale);
+      const newHeight = Math.round(height * scale);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = newWidth;
+      canvas.height = newHeight;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+      canvas.toBlob(
+        function(blob) {
+          if (!blob) {
+            resolve(file);
+            return;
+          }
+
+          const compressed = new File([blob], file.name, { type: "image/jpeg" });
+
+          // salvaguarda: se por algum motivo a versão "otimizada"
+          // saiu maior que a original, mantém a original
+          resolve(compressed.size < file.size ? compressed : file);
+        },
+        "image/jpeg",
+        PHOTO_JPEG_QUALITY
+      );
+    };
+
+    img.onerror = function() {
+      URL.revokeObjectURL(objectUrl);
+      resolve(file); // não conseguiu otimizar - envia original
+    };
+
+    img.src = objectUrl;
   });
 }
 
@@ -1270,6 +1350,18 @@ async function handleFiles(input) {
     setBusy(false);
     setStatus("Nenhum arquivo válido para enviar.");
     return;
+  }
+
+  // -------------------------------------------------------
+  // OTIMIZAR FOTOS (reduz o tamanho antes de subir - não
+  // afeta vídeos, que passam direto)
+  // -------------------------------------------------------
+
+  for (let i = 0; i < validFiles.length; i++) {
+    if (validFiles[i].type.startsWith("image/")) {
+      setStatus('Otimizando "' + validFiles[i].name + '"...', true);
+      validFiles[i] = await compressImage(validFiles[i]);
+    }
   }
 
   // -------------------------------------------------------
