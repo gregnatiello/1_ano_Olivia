@@ -758,22 +758,26 @@ const MAX_VIDEO_DURATION = 40;
 const VIDEO_DURATION_TOLERANCE = 1;
 
 /* =========================================================
-   UPLOAD RÁPIDO
-   Todo arquivo já começa direto no bloco grande (32 MB) -
-   menos requisições desde o primeiro byte. Se algum bloco
-   falhar de verdade, cai para um bloco menor (mais seguro)
-   só até a próxima tentativa se recuperar.
+   UPLOAD - CONFIGURAÇÃO FINAL
+
+   Bloco de tamanho fixo (16 MB) - simples e comprovado.
+
+   O ganho real de velocidade e estabilidade vem de tratar
+   fotos e vídeos de forma diferente:
+   - FOTOS: sobem em paralelo (PHOTO_CONCURRENCY por vez) -
+     são pequenas, então concorrência ajuda de verdade.
+   - VÍDEOS: sobem UM DE CADA VEZ (VIDEO_CONCURRENCY = 1) -
+     são pesados, então rodar vários juntos só faz cada um
+     disputar a mesma internet do celular, ficando mais
+     lento e mais sujeito a falhar. Um de cada vez usa a
+     conexão inteira e é, na prática, mais rápido E mais
+     confiável.
 ========================================================= */
 
-const FAST_CHUNK_SIZE = 32 * 1024 * 1024;
-const SAFE_CHUNK_SIZE = 8 * 1024 * 1024;
-let currentChunkSize = FAST_CHUNK_SIZE;
+const CHUNK_SIZE = 16 * 1024 * 1024;
 
-// Quantos arquivos sobem AO MESMO TEMPO quando o convidado
-// seleciona vários de uma vez (galeria). Aumentado de 3 para
-// 5 - ainda com boa margem de segurança em relação ao limite
-// de execuções simultâneas do Google.
-const UPLOAD_CONCURRENCY = 5;
+const PHOTO_CONCURRENCY = 3;
+const VIDEO_CONCURRENCY = 1;
 
 
 /* =========================================================
@@ -1056,26 +1060,17 @@ async function initializeUpload(file, userName) {
    ENVIAR UM BLOCO
 ========================================================= */
 
-/* =========================================================
-   ENVIAR UM BLOCO
-   Metadados vão na URL (query string); o base64 do bloco
-   vai puro no corpo da requisição (texto simples), evitando
-   o desperdício extra de espaço que o URLSearchParams causa
-   em caracteres especiais do base64 (+, /, =).
-========================================================= */
-
 async function sendChunk(uploadUrl, start, end, total, base64) {
-  const query = new URLSearchParams({
+  const body = new URLSearchParams({
     action: "chunk",
     uploadUrl: uploadUrl,
     start: String(start),
     end: String(end),
-    total: String(total)
+    total: String(total),
+    base64: base64
   });
 
-  const url = SCRIPT_URL + "?" + query.toString();
-
-  const data = await fetchWithRetry(base64, 3, url);
+  const data = await fetchWithRetry(body);
 
   if (data.status !== "chunk_received" && data.status !== "success") {
     throw new Error(data.message || "Erro ao enviar bloco.");
@@ -1101,43 +1096,28 @@ async function uploadFile(file, userName, onProgress) {
   let start = 0;
 
   while (start < total) {
-    const chunkSize = Math.min(currentChunkSize, total - start);
+    const chunkSize = Math.min(CHUNK_SIZE, total - start);
     const end = Math.min(start + chunkSize - 1, total - 1);
     const chunk = file.slice(start, end + 1);
 
-    try {
-      const base64 = await blobToBase64(chunk);
-      const result = await sendChunk(uploadUrl, start, end, total, base64);
+    const base64 = await blobToBase64(chunk);
+    const result = await sendChunk(uploadUrl, start, end, total, base64);
 
-      let uploaded = end + 1;
+    let uploaded = end + 1;
 
-      if (typeof result.nextStart === "number") {
-        uploaded = result.nextStart;
-      }
-
-      if (onProgress) {
-        onProgress(uploaded);
-      }
-
-      if (result.status === "success") {
-        return result;
-      }
-
-      // Depois de um bloco concluído com sucesso, garante
-      // que continua no tamanho rápido (caso tenha encolhido
-      // por uma falha anterior).
-      if (currentChunkSize < FAST_CHUNK_SIZE) {
-        currentChunkSize = FAST_CHUNK_SIZE;
-      }
-
-      start = uploaded;
-
-    } catch (error) {
-      // Falha real: volta para um bloco menor e deixa o
-      // retry cuidar da tentativa seguinte.
-      currentChunkSize = SAFE_CHUNK_SIZE;
-      throw error;
+    if (typeof result.nextStart === "number") {
+      uploaded = result.nextStart;
     }
+
+    if (onProgress) {
+      onProgress(uploaded);
+    }
+
+    if (result.status === "success") {
+      return result;
+    }
+
+    start = uploaded;
   }
 
   return { status: "success" };
@@ -1372,11 +1352,9 @@ async function handleFiles(input) {
   }
 
   // -------------------------------------------------------
-  // ENVIAR EM PARALELO (mais rápido para vários arquivos)
-  // Até UPLOAD_CONCURRENCY arquivos sobem simultaneamente.
-  // Dentro de cada arquivo os blocos continuam sequenciais
-  // (exigência do protocolo do Drive), mas arquivos
-  // diferentes não esperam uns pelos outros.
+  // ENVIAR: fotos em paralelo, vídeos um de cada vez
+  // (a lógica completa está mais abaixo, perto do
+  // Promise.all que dispara as filas).
   // -------------------------------------------------------
 
   const totalBytes = validFiles.reduce(function(sum, f) { return sum + f.size; }, 0);
@@ -1447,24 +1425,46 @@ async function handleFiles(input) {
 
   updateAggregateProgress();
 
-  let nextIndex = 0;
+  // Fotos sobem em paralelo entre si; vídeos sobem um de
+  // cada vez - mas os dois grupos rodam ao mesmo tempo (uma
+  // foto pode estar subindo enquanto um vídeo também sobe).
 
-  async function worker() {
-    while (nextIndex < validFiles.length) {
-      const index = nextIndex;
-      nextIndex++;
-      await uploadOne(index);
+  const photoIndices = [];
+  const videoIndices = [];
+
+  validFiles.forEach(function(file, index) {
+    if (file.type.startsWith("video/")) {
+      videoIndices.push(index);
+    } else {
+      photoIndices.push(index);
     }
+  });
+
+  async function runQueue(indices, concurrency) {
+    let cursor = 0;
+
+    async function worker() {
+      while (cursor < indices.length) {
+        const index = indices[cursor];
+        cursor++;
+        await uploadOne(index);
+      }
+    }
+
+    const workers = [];
+    const workerCount = Math.min(concurrency, indices.length);
+
+    for (let w = 0; w < workerCount; w++) {
+      workers.push(worker());
+    }
+
+    await Promise.all(workers);
   }
 
-  const workers = [];
-  const workerCount = Math.min(UPLOAD_CONCURRENCY, validFiles.length);
-
-  for (let w = 0; w < workerCount; w++) {
-    workers.push(worker());
-  }
-
-  await Promise.all(workers);
+  await Promise.all([
+    runQueue(photoIndices, PHOTO_CONCURRENCY),
+    runQueue(videoIndices, VIDEO_CONCURRENCY)
+  ]);
 
   const successful = results.filter(function(r) { return r === "success"; }).length;
 
