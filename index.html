@@ -1054,22 +1054,19 @@ async function initializeUpload(file, userName) {
 
 /* =========================================================
    ENVIAR UM BLOCO
-   Envia o bloco como binário puro (multipart/form-data),
-   sem conversão para base64 - isso reduz o volume de dados
-   transferidos em ~25-33% comparado ao formato anterior,
-   sem abrir mão de passar tudo pelo servidor protegido.
 ========================================================= */
 
-async function sendChunk(uploadUrl, start, end, total, chunkBlob) {
-  const formData = new FormData();
-  formData.append("action", "chunk");
-  formData.append("uploadUrl", uploadUrl);
-  formData.append("start", String(start));
-  formData.append("end", String(end));
-  formData.append("total", String(total));
-  formData.append("chunk", chunkBlob, "chunk.bin");
+async function sendChunk(uploadUrl, start, end, total, base64) {
+  const body = new URLSearchParams({
+    action: "chunk",
+    uploadUrl: uploadUrl,
+    start: String(start),
+    end: String(end),
+    total: String(total),
+    base64: base64
+  });
 
-  const data = await fetchWithRetry(formData);
+  const data = await fetchWithRetry(body);
 
   if (data.status !== "chunk_received" && data.status !== "success") {
     throw new Error(data.message || "Erro ao enviar bloco.");
@@ -1100,7 +1097,8 @@ async function uploadFile(file, userName, onProgress) {
     const chunk = file.slice(start, end + 1);
 
     try {
-      const result = await sendChunk(uploadUrl, start, end, total, chunk);
+      const base64 = await blobToBase64(chunk);
+      const result = await sendChunk(uploadUrl, start, end, total, base64);
 
       let uploaded = end + 1;
 
