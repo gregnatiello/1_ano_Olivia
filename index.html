@@ -767,9 +767,10 @@ const FAST_CHUNK_SIZE = 32 * 1024 * 1024;
 let currentChunkSize = CHUNK_SIZE;
 
 // Quantos arquivos sobem AO MESMO TEMPO quando o convidado
-// seleciona vários de uma vez (galeria). Isso é o principal
-// ganho de velocidade em lotes grandes.
-const UPLOAD_CONCURRENCY = 3;
+// seleciona vários de uma vez (galeria). Aumentado de 3 para
+// 5 - ainda com boa margem de segurança em relação ao limite
+// de execuções simultâneas do Google.
+const UPLOAD_CONCURRENCY = 5;
 
 
 /* =========================================================
@@ -1285,18 +1286,37 @@ async function handleFiles(input) {
 
   let completedCount = 0;
   let lastErrorMessage = "";
+  const batchStartTime = performance.now();
+
+  function formatEta(seconds) {
+    if (!isFinite(seconds) || seconds < 0) return "calculando...";
+    if (seconds < 1) return "menos de 1s";
+    if (seconds < 60) return Math.ceil(seconds) + "s";
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.round(seconds % 60);
+    return minutes + "min " + secs + "s";
+  }
 
   function updateAggregateProgress() {
     const uploaded = uploadedBytes.reduce(function(a, b) { return a + b; }, 0);
     const percent = totalBytes > 0 ? Math.min(100, Math.round((uploaded / totalBytes) * 100)) : 100;
-    setProgress(percent);
-  }
 
-  function updateAggregateStatus() {
-    setStatus(
-      "Enviando arquivos... " + completedCount + " de " + validFiles.length + " concluído(s)",
-      true
-    );
+    setProgress(percent);
+
+    const elapsedSeconds = (performance.now() - batchStartTime) / 1000;
+    const speed = elapsedSeconds > 0.3 ? uploaded / elapsedSeconds : 0; // bytes/s
+    const remainingBytes = Math.max(0, totalBytes - uploaded);
+    const etaSeconds = speed > 0 ? remainingBytes / speed : NaN;
+
+    let message = percent + "% concluído";
+
+    if (uploaded > 0 && remainingBytes > 0) {
+      message += " — cerca de " + formatEta(etaSeconds) + " restantes";
+    }
+
+    message += " (" + completedCount + " de " + validFiles.length + " arquivo(s) prontos)";
+
+    setStatus(message, true);
   }
 
   async function uploadOne(index) {
@@ -1323,10 +1343,10 @@ async function handleFiles(input) {
     }
 
     completedCount++;
-    updateAggregateStatus();
+    updateAggregateProgress();
   }
 
-  updateAggregateStatus();
+  updateAggregateProgress();
 
   let nextIndex = 0;
 
