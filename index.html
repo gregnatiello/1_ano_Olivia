@@ -656,7 +656,7 @@ input[type="file"] {
 <path d="m15 10 6-4v12l-6-4z"/>
 </svg>
 </span>
-<span class="button-text">Gravar vídeo (até 40s)</span>
+<span class="button-text">Gravar vídeo (até 30s)</span>
 </label>
 
 <input type="file" id="camera-video" accept="video/*" capture="environment">
@@ -709,7 +709,7 @@ input[type="file"] {
 <div class="info-title">♡ Importante ♡</div>
 Máximo de <strong>10 fotos</strong> e <strong>3 vídeos</strong> por convidado.
 <br>
-Vídeos de até <strong>40 segundos</strong>.
+Vídeos de até <strong>30 segundos</strong>.
 <br><br>
 Obrigado por compartilhar esse momento!
 </div>
@@ -744,38 +744,25 @@ Obrigado por compartilhar esse momento!
 
 /* =========================================================
    CONFIGURAÇÕES
+   O endereço da função fica no mesmo site (Netlify), então
+   não precisa configurar URL nenhuma aqui - funciona sozinho
+   assim que publicado.
 ========================================================= */
 
-const SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwxhyb0nTOHSMEbbUuzmoqgcQ7KNg2p9hVWidVdQrZDOy2FvDzSzdPoRK7SCdLAb1jY/exec";
+const FUNCTION_URL = "/.netlify/functions/authorize-upload";
 
 const MAX_PHOTOS = 10;
 const MAX_VIDEOS = 3;
-const MAX_VIDEO_DURATION = 40;
+const MAX_VIDEO_DURATION = 30;
 
 // Pequena margem de tolerância: celulares às vezes gravam
-// um vídeo "de 40s" com duração real de 40,x segundos.
+// um vídeo "de 30s" com duração real de 30,x segundos.
 const VIDEO_DURATION_TOLERANCE = 1;
 
-/* =========================================================
-   UPLOAD - CONFIGURAÇÃO FINAL
-
-   Bloco de tamanho fixo (16 MB) - simples e comprovado.
-
-   O ganho real de velocidade e estabilidade vem de tratar
-   fotos e vídeos de forma diferente:
-   - FOTOS: sobem em paralelo (PHOTO_CONCURRENCY por vez) -
-     são pequenas, então concorrência ajuda de verdade.
-   - VÍDEOS: sobem UM DE CADA VEZ (VIDEO_CONCURRENCY = 1) -
-     são pesados, então rodar vários juntos só faz cada um
-     disputar a mesma internet do celular, ficando mais
-     lento e mais sujeito a falhar. Um de cada vez usa a
-     conexão inteira e é, na prática, mais rápido E mais
-     confiável.
-========================================================= */
-
-const CHUNK_SIZE = 16 * 1024 * 1024;
-
+// Fotos sobem em paralelo entre si; vídeos sobem um de cada
+// vez (arquivo grande + várias conexões ao mesmo tempo só
+// disputam a mesma internet do celular e ficam mais lentas
+// e mais sujeitas a falhar).
 const PHOTO_CONCURRENCY = 3;
 const VIDEO_CONCURRENCY = 1;
 
@@ -863,7 +850,58 @@ window.addEventListener("beforeunload", function(event) {
 
 
 /* =========================================================
-   SINCRONIZAR CONTADORES COM O GOOGLE DRIVE
+   ESPERAR (usado entre tentativas de reenvio)
+========================================================= */
+
+function wait(ms) {
+  return new Promise(function(resolve) {
+    setTimeout(resolve, ms);
+  });
+}
+
+
+/* =========================================================
+   CHAMAR A FUNÇÃO DE AUTORIZAÇÃO/CONTAGEM
+   (com tentativas automáticas em caso de falha de rede)
+========================================================= */
+
+async function callFunction(payload, maxAttempts) {
+  maxAttempts = maxAttempts || 3;
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const response = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro HTTP " + response.status);
+      }
+
+      return await response.json();
+
+    } catch (error) {
+      lastError = error;
+      console.warn("Tentativa " + attempt + " de " + maxAttempts + " falhou:", error);
+
+      if (attempt < maxAttempts) {
+        await wait(500 * attempt);
+      }
+    }
+  }
+
+  throw new Error(
+    (lastError && lastError.message ? lastError.message : "Falha de conexão") +
+    " (após " + maxAttempts + " tentativas)"
+  );
+}
+
+
+/* =========================================================
+   SINCRONIZAR CONTADORES
 ========================================================= */
 
 async function syncCounters() {
@@ -871,17 +909,7 @@ async function syncCounters() {
   if (!guestName) return;
 
   try {
-    const body = new URLSearchParams({
-      action: "counts",
-      userName: guestName
-    });
-
-    const response = await fetch(SCRIPT_URL, {
-      method: "POST",
-      body: body
-    });
-
-    const data = await response.json();
+    const data = await callFunction({ mode: "counts", guestName: guestName });
 
     if (data.status === "success") {
       currentPhotos = Number(data.photosUsed || 0);
@@ -963,164 +991,91 @@ async function loadGuestName() {
 
 
 /* =========================================================
-   CONVERTER BLOCO PARA BASE64
+   AUTORIZAR E ENVIAR UM ARQUIVO PARA O CLOUDINARY
+   1) pede autorização (checa limite e recebe uma assinatura)
+   2) envia o arquivo direto pro Cloudinary (sem intermediário)
 ========================================================= */
 
-function blobToBase64(blob) {
+async function authorizeUpload(guestName, resourceType) {
+  const data = await callFunction({
+    mode: "authorize",
+    guestName: guestName,
+    resourceType: resourceType
+  });
+
+  if (data.status !== "authorized") {
+    throw new Error(data.message || "Não foi possível autorizar o envio.");
+  }
+
+  return data;
+}
+
+function uploadToCloudinary(file, auth, onProgress) {
   return new Promise(function(resolve, reject) {
-    const reader = new FileReader();
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", auth.apiKey);
+    formData.append("timestamp", auth.timestamp);
+    formData.append("signature", auth.signature);
+    formData.append("folder", auth.folder);
+    formData.append("upload_preset", auth.uploadPreset);
 
-    reader.onload = function() {
-      resolve(reader.result.split(",")[1]);
+    const xhr = new XMLHttpRequest();
+    const url = "https://api.cloudinary.com/v1_1/" + auth.cloudName + "/auto/upload";
+
+    xhr.open("POST", url, true);
+
+    xhr.upload.onprogress = function(event) {
+      if (event.lengthComputable && onProgress) {
+        onProgress(event.loaded);
+      }
     };
 
-    reader.onerror = function() {
-      reject(new Error("Erro ao preparar o bloco."));
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        if (onProgress) onProgress(file.size);
+        resolve();
+      } else {
+        reject(new Error("O Cloudinary recusou o envio (código " + xhr.status + ")."));
+      }
     };
 
-    reader.readAsDataURL(blob);
+    xhr.onerror = function() {
+      reject(new Error("Falha de conexão ao enviar o arquivo."));
+    };
+
+    xhr.send(formData);
   });
 }
 
-
-/* =========================================================
-   ESPERAR
-========================================================= */
-
-function wait(ms) {
-  return new Promise(function(resolve) {
-    setTimeout(resolve, ms);
-  });
-}
-
-
-/* =========================================================
-   FAZER UMA REQUISIÇÃO COM TENTATIVAS AUTOMÁTICAS
-========================================================= */
-
-async function fetchWithRetry(body, maxAttempts, url) {
-  maxAttempts = maxAttempts || 3;
-  const targetUrl = url || SCRIPT_URL;
+async function uploadFileWithRetry(file, guestName, resourceType, onProgress, maxAttempts) {
+  maxAttempts = maxAttempts || 2;
   let lastError;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      const response = await fetch(targetUrl, {
-        method: "POST",
-        body: body
-      });
-
-      if (!response.ok) {
-        throw new Error("Erro HTTP " + response.status);
-      }
-
-      return await response.json();
+      const auth = await authorizeUpload(guestName, resourceType);
+      await uploadToCloudinary(file, auth, onProgress);
+      return;
 
     } catch (error) {
       lastError = error;
-      console.warn("Tentativa " + attempt + " de " + maxAttempts + " falhou:", error);
+      console.warn("Tentativa " + attempt + " de envio falhou:", error);
+
+      // Se foi recusado por já ter atingido o limite, não
+      // adianta tentar de novo - encerra na hora.
+      if (error && error.message && error.message.indexOf("Limite de") === 0) {
+        throw error;
+      }
 
       if (attempt < maxAttempts) {
-        await wait(500 * attempt);
+        onProgress(0);
+        await wait(1000 * attempt);
       }
     }
   }
 
-  throw new Error(
-    (lastError && lastError.message ? lastError.message : "Falha de conexão") +
-    " (após " + maxAttempts + " tentativas)"
-  );
-}
-
-
-/* =========================================================
-   INICIAR UPLOAD
-========================================================= */
-
-async function initializeUpload(file, userName) {
-  const body = new URLSearchParams({
-    action: "init",
-    userName: userName,
-    fileName: file.name,
-    mimeType: file.type || "application/octet-stream",
-    fileSize: String(file.size)
-  });
-
-  const data = await fetchWithRetry(body);
-
-  if (data.status !== "upload_initialized") {
-    throw new Error(data.message || "Não foi possível iniciar o upload.");
-  }
-
-  return data;
-}
-
-
-/* =========================================================
-   ENVIAR UM BLOCO
-========================================================= */
-
-async function sendChunk(uploadUrl, start, end, total, base64) {
-  const body = new URLSearchParams({
-    action: "chunk",
-    uploadUrl: uploadUrl,
-    start: String(start),
-    end: String(end),
-    total: String(total),
-    base64: base64
-  });
-
-  const data = await fetchWithRetry(body);
-
-  if (data.status !== "chunk_received" && data.status !== "success") {
-    throw new Error(data.message || "Erro ao enviar bloco.");
-  }
-
-  return data;
-}
-
-
-/* =========================================================
-   UPLOAD COMPLETO DE UM ARQUIVO
-   (blocos sequenciais dentro do próprio arquivo - obrigatório
-   pelo protocolo resumível do Drive. onProgress recebe os
-   BYTES já enviados, não porcentagem, para permitir somar o
-   progresso de vários arquivos ao mesmo tempo.)
-========================================================= */
-
-async function uploadFile(file, userName, onProgress) {
-  const init = await initializeUpload(file, userName);
-  const uploadUrl = init.uploadUrl;
-  const total = file.size;
-
-  let start = 0;
-
-  while (start < total) {
-    const chunkSize = Math.min(CHUNK_SIZE, total - start);
-    const end = Math.min(start + chunkSize - 1, total - 1);
-    const chunk = file.slice(start, end + 1);
-
-    const base64 = await blobToBase64(chunk);
-    const result = await sendChunk(uploadUrl, start, end, total, base64);
-
-    let uploaded = end + 1;
-
-    if (typeof result.nextStart === "number") {
-      uploaded = result.nextStart;
-    }
-
-    if (onProgress) {
-      onProgress(uploaded);
-    }
-
-    if (result.status === "success") {
-      return result;
-    }
-
-    start = uploaded;
-  }
-
-  return { status: "success" };
+  throw lastError;
 }
 
 
@@ -1157,12 +1112,6 @@ function validateVideoDuration(file) {
 
 /* =========================================================
    OTIMIZAR FOTO ANTES DE ENVIAR
-   Reduz fotos muito grandes (comuns em câmeras de celular)
-   para um tamanho ainda ótimo de visualização, cortando bem
-   o tempo de envio - principal ganho em lotes de galeria.
-   Vídeos não são tocados. Se algo der errado na otimização
-   (formato não suportado pelo navegador, etc.), a foto
-   original é enviada normalmente - nunca trava o envio.
 ========================================================= */
 
 const MAX_PHOTO_DIMENSION = 1920; // pixels, no lado maior
@@ -1185,7 +1134,6 @@ function compressImage(file) {
       const height = img.naturalHeight;
 
       if (!width || !height || Math.max(width, height) <= MAX_PHOTO_DIMENSION) {
-        // já está pequena o suficiente - envia como está
         resolve(file);
         return;
       }
@@ -1209,9 +1157,6 @@ function compressImage(file) {
           }
 
           const compressed = new File([blob], file.name, { type: "image/jpeg" });
-
-          // salvaguarda: se por algum motivo a versão "otimizada"
-          // saiu maior que a original, mantém a original
           resolve(compressed.size < file.size ? compressed : file);
         },
         "image/jpeg",
@@ -1221,7 +1166,7 @@ function compressImage(file) {
 
     img.onerror = function() {
       URL.revokeObjectURL(objectUrl);
-      resolve(file); // não conseguiu otimizar - envia original
+      resolve(file);
     };
 
     img.src = objectUrl;
@@ -1254,16 +1199,12 @@ async function handleFiles(input) {
   const selectedFiles = [];
   let blockedByPhotoLimit = 0;
   let blockedByVideoLimit = 0;
-  let ignoredWrongType = 0;
 
   for (const file of files) {
     const isPhoto = file.type.startsWith("image/");
     const isVideo = file.type.startsWith("video/");
 
-    if (!isPhoto && !isVideo) {
-      ignoredWrongType++;
-      continue;
-    }
+    if (!isPhoto && !isVideo) continue;
 
     if (isPhoto) {
       if (photoSlots > 0) {
@@ -1325,7 +1266,7 @@ async function handleFiles(input) {
       const valid = await validateVideoDuration(file);
 
       if (!valid) {
-        alert('O vídeo "' + file.name + '" ultrapassa 40 segundos ou não pôde ser lido. Ele não será enviado.');
+        alert('O vídeo "' + file.name + '" ultrapassa ' + MAX_VIDEO_DURATION + ' segundos ou não pôde ser lido. Ele não será enviado.');
         continue;
       }
     }
@@ -1340,8 +1281,7 @@ async function handleFiles(input) {
   }
 
   // -------------------------------------------------------
-  // OTIMIZAR FOTOS (reduz o tamanho antes de subir - não
-  // afeta vídeos, que passam direto)
+  // OTIMIZAR FOTOS
   // -------------------------------------------------------
 
   for (let i = 0; i < validFiles.length; i++) {
@@ -1353,8 +1293,6 @@ async function handleFiles(input) {
 
   // -------------------------------------------------------
   // ENVIAR: fotos em paralelo, vídeos um de cada vez
-  // (a lógica completa está mais abaixo, perto do
-  // Promise.all que dispara as filas).
   // -------------------------------------------------------
 
   const totalBytes = validFiles.reduce(function(sum, f) { return sum + f.size; }, 0);
@@ -1381,7 +1319,7 @@ async function handleFiles(input) {
     setProgress(percent);
 
     const elapsedSeconds = (performance.now() - batchStartTime) / 1000;
-    const speed = elapsedSeconds > 0.3 ? uploaded / elapsedSeconds : 0; // bytes/s
+    const speed = elapsedSeconds > 0.3 ? uploaded / elapsedSeconds : 0;
     const remainingBytes = Math.max(0, totalBytes - uploaded);
     const etaSeconds = speed > 0 ? remainingBytes / speed : NaN;
 
@@ -1398,17 +1336,18 @@ async function handleFiles(input) {
 
   async function uploadOne(index) {
     const file = validFiles[index];
+    const resourceType = file.type.startsWith("video/") ? "video" : "image";
 
     try {
-      await uploadFile(file, guestName, function(uploaded) {
+      await uploadFileWithRetry(file, guestName, resourceType, function(uploaded) {
         uploadedBytes[index] = uploaded;
         updateAggregateProgress();
       });
 
       results[index] = "success";
 
-      if (file.type.startsWith("image/")) currentPhotos++;
-      if (file.type.startsWith("video/")) currentVideos++;
+      if (resourceType === "image") currentPhotos++;
+      if (resourceType === "video") currentVideos++;
 
       saveCounters();
       updateCounters();
@@ -1424,10 +1363,6 @@ async function handleFiles(input) {
   }
 
   updateAggregateProgress();
-
-  // Fotos sobem em paralelo entre si; vídeos sobem um de
-  // cada vez - mas os dois grupos rodam ao mesmo tempo (uma
-  // foto pode estar subindo enquanto um vídeo também sobe).
 
   const photoIndices = [];
   const videoIndices = [];
@@ -1515,7 +1450,5 @@ updateCounters();
 
 </script>
 
-
 </body>
-
 </html>
